@@ -1,4 +1,3 @@
-{% extends "flask_user_layout.html" %}
 {% block content %}
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <div class="container">
@@ -19,12 +18,13 @@
             <table>
                 <tr>
                     {%for role in user.roles%}
-                    <td class="alert alert-primary"><div class = 'col ml-3'>{{'{} '.format(role.name)}}</div></td>
+                    <td style = 'padding: 0px 5px; border:none'><div class="p-1 rounded bg-info text-light" >{{'{} '.format(role.name)}}</div></td>
                     {%endfor%}
+                    
                 </tr>
             </table>
         </td>
-        
+        <td><button type="button" class="btn btn-success mr-3"><a href="{{url_for('/roles', user = user)}}">Изменить</a></button></td>
       </tr>
     {%endfor%}
 
