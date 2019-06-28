@@ -15,6 +15,13 @@ class User(db.Model, UserMixin):
     roles = db.relationship('Role', secondary='user_roles')
 
     # Define the Role data-model
+    def delete_role(self, del_role):
+        for role in self.roles:
+            self.roles.remove(Role.query.filter(Role.name==del_role).first())
+            db.session.commit()
+    def append_role(self, del_role):
+            self.roles.append(Role.query.filter(Role.name==del_role).first())
+            db.session.commit()
 
 
 class Role(db.Model):

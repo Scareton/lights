@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.urls import url_parse
 from app.models import User, UserRoles, Role
 
+
 @app.route('/')
 def home_page():
     return render_template_string("""
@@ -26,8 +27,30 @@ def home_page():
 @app.route('/users_table')
 @roles_required('Admin')
 def users_table():
-    users = User.query.all()
+    users = User.query.filter(User.username != 'admin')
     return render_template('table.html', users=users)
+
+@app.route('/role/<user>')
+@roles_required('Admin')
+def roles_form(user):
+    user = User.query.filter(User.username == user).first()
+    roles = Role.query.all()
+    return render_template('user_roles.html', user=user, roles=roles)
+
+@app.route('/delete_role/<user>/<role>')
+@roles_required('Admin')
+def delete_role(user, role):
+    db_user = User.query.filter(User.username == user).first()
+    db_user.delete_role(role)
+    return redirect(url_for('roles_form', user=user))
+
+@app.route('/append_role/<user>/<role>')
+@roles_required('Admin')
+def append_role(user, role):
+    db_user = User.query.filter(User.username == user).first()
+    db_user.append_role(role)
+    return redirect(url_for('roles_form', user=user))
+
 
 @app.route('/members')
 @login_required    # Use of @login_required decorator
