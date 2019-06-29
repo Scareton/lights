@@ -1,34 +1,38 @@
-<link rel="stylesheet" href='{{ url_for("static", filename="style.css") }}'>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<form class="well form-horizontal">
-    <fieldset>
-       <div class="form-group">
-          
-       <div class="form-group">
-            <label class="col-md-4 control-label">Роли юзера</label>
-            <div class="col-md-8 inputGroupContainer">
-                    <table class='table'>
-                            <tr>
-                                {%for role in user.roles%}
-                                <td style = 'padding: 0px 5px; border:none'><div class="p-1 rounded bg-info text-light" >{{'{} '.format(role.name)}}</div></td>
-                                <td><a href="{{url_for('delete_role', user = user.username, role=role.name)}}"><button type="button" class="btn btn-success mr-3">Удалить</button></a></td>
-                                {%endfor%}
-                            </tr>
-                        </table>
-               </div>
-            </div>
-            <label class="col-md-4 control-label">Добавить роль</label>
-            <div class="col-md-8 inputGroupContainer">
-               <table class='table'>
-                  <tr>
-                      {%for role in roles%}
-                      <td style = 'padding: 0px 5px; border:none'><div class="p-1 rounded bg-info text-light" >{{'{} '.format(role.name)}}</div></td>
-                      <td><a href="{{url_for('append_role', user = user.username, role=role.name)}}"><button type="button" class="btn btn-success mr-3">Добавить</button></a></td>
-                      {%endfor%}
-                  </tr>
-              </table>
-            </div>
-         </div>
-         </div>
-    </fieldset>
- </form>
+{%extends "base.html" %}
+{% block content %}
+ <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Роли пользователя</th>
+            <th scope="col">Возможные роли</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+                <table>
+                    <tr>
+                            {%for role in user.roles%}
+                            <td style = 'padding: 0px 5px; border:none'><div class="p-1 rounded bg-info text-light" >{{'{} '.format(role.name)}}</div></td>
+                            <td style = 'padding: 0px 5px; border:none'><a href="{{url_for('delete_role', user = user.username, role=role.name)}}"><button type="button" class="btn btn-outline-danger btn-sm mr-3">&times;</button></a></td>
+                            {%endfor%}
+                        
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table>
+                    <tr>
+                            {%for role in roles%}
+                            <td style = 'padding: 0px 5px; border:none'><div class="p-1 rounded bg-info text-light" >{{'{} '.format(role.name)}}</div></td>
+                            <td style = 'padding: 0px 5px; border:none'><a href="{{url_for('append_role', user = user.username, role=role.name)}}"><button type="button" class="btn btn-outline-success btn-sm mr-3">+</button></a></td>
+                            {%endfor%}
+                    </tr>
+                </table>
+            </td>
+          </tr>
+    
+        </tbody>
+    </table>
+    </div>
+ {% endblock %}
