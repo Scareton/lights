@@ -15,7 +15,7 @@ def home_page():
 @app.route('/users_table')
 @roles_required('Admin')
 def users_table():
-    users = User.query.filter(User.username != 'admin')
+    users = User.query.filter(User.username != current_user.username)
     return render_template('table.html', users=users)
 
 @app.route('/role/<user>')
