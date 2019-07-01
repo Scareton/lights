@@ -15,7 +15,7 @@ def home_page():
 @app.route('/users_table')
 @roles_required('Admin')
 def users_table():
-    users = User.query.filter(User.username != 'admin')
+    users = User.query.filter(User.username != current_user.username)
     return render_template('table.html', users=users)
 
 @app.route('/role/<user>')
@@ -57,6 +57,9 @@ def member_page():
             """)
 
     # The Admin page requires an 'Admin' role.
+@app.route('/product_form')
+def product_form():
+    return render_template('product_form.html')
 @app.route('/admin')
 @roles_required('Admin')    # Use of @roles_required decorator
 def admin_page():
