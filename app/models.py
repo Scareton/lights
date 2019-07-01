@@ -35,3 +35,39 @@ class UserRoles(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
     role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
+
+class Product(db.Model):
+    __tablename__ = 'product'
+    id = db.Column(db.Integer(), primary_key=True)
+    product_name = db.Column(db.String(255, collation='NOCASE'), nullable=False, unique=True)
+    components =  db.relationship('Component', secondary='product_components')
+
+class ProductComponents(db.Model):
+    __tablename__ = 'product_components'
+    id = db.Column(db.Integer(), primary_key=True)
+    product_id = db.Column(db.Integer(), db.ForeignKey('product.id', ondelete='CASCADE'))
+    component_id = db.Column(db.Integer(), db.ForeignKey('component.id', ondelete='CASCADE'))
+
+class Component(db.Model):
+    __tablename__ = 'component'
+    id = db.Column(db.Integer(), primary_key=True)
+    detail = db.relationship('Detail', secondary='details')
+    component_count = db.Column(db.Integer())
+
+class Detail(db.Model):
+    __tablename__ = 'detail'
+    id = db.Column(db.Integer(), primary_key=True)
+    detail_name = db.Column(db.String(255, collation='NOCASE'), nullable=False, unique=True)
+    cost = db.Column(db.Integer())
+
+class StockComponents(db.Model):
+    __tablename__ = 'stock_components'
+    id = db.Column(db.Integer(), primary_key=True)
+    stock_id = db.Column(db.Integer(), db.ForeignKey('stock.id', ondelete='CASCADE'))
+    component_id = db.Column(db.Integer(), db.ForeignKey('component.id', ondelete='CASCADE'))
+
+
+class Stock(db.Model):
+    __tablename__ = 'stock'
+    id = db.Column(db.Integer(), primary_key=True)
+    components = db.relationship('Component', secondary='stock_components')
