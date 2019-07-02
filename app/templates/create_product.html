@@ -1,0 +1,43 @@
+{%extends 'base.html'%}
+
+
+
+{%block content%}
+{% block flash_messages %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-danger">{{ message|safe }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+{% endblock %}
+<form action = "" method = post>
+    <fieldset>
+       <legend>Добавить товар</legend>
+       {{ form.hidden_tag() }}
+       
+       <div style = font-size:20px; font-weight:bold; margin-left:150px;>
+          {{ form.name.label }}<br>
+          {{ form.name }}
+          <br>
+          
+          {{ form.item.label }} {{ form.item }}
+          <br>
+          {{ form.power.label }} {{ form.power }}
+          <br>
+          {{ form.materials.label }}
+          {{ form.materials }}
+          <br>
+
+          {{ form.weight.label }}
+          {{ form.weight }}
+          <br>
+          
+          <br>
+          {{ form.submit }}
+       </div>
+       
+    </fieldset>
+ </form>
+{%endblock%}

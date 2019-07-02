@@ -40,34 +40,37 @@ class Product(db.Model):
     __tablename__ = 'product'
     id = db.Column(db.Integer(), primary_key=True)
     product_name = db.Column(db.String(255, collation='NOCASE'), nullable=False, unique=True)
-    components =  db.relationship('Component', secondary='product_components')
+    product_power = db.Column(db.Integer(), nullable=False)
+    product_item = db.Column(db.Integer(), unique=True)
+    product_weight = db.Column(db.Integer(), nullable=False)
+    product_material = db.Column(db.String(255, collation='NOCASE'))
 
-class ProductComponents(db.Model):
-    __tablename__ = 'product_components'
-    id = db.Column(db.Integer(), primary_key=True)
-    product_id = db.Column(db.Integer(), db.ForeignKey('product.id', ondelete='CASCADE'))
-    component_id = db.Column(db.Integer(), db.ForeignKey('component.id', ondelete='CASCADE'))
+    def __init__(self, product_name, product_power, product_item, product_weight, product_material):
+        self.product_name = product_name
+        self.product_power = product_power
+        self.product_item = product_item
+        self.product_weight = product_weight
+        self.product_material = product_material
 
 class Component(db.Model):
     __tablename__ = 'component'
     id = db.Column(db.Integer(), primary_key=True)
-    detail = db.relationship('Detail', secondary='details')
-    component_count = db.Column(db.Integer())
+    component_name = db.Column(db.String(255, collation='NOCASE'), nullable=False, unique=True)
+    component_unit = db.Column(db.String(255, collation='NOCASE'))
+    component_item = db.Column(db.Integer(), unique=True)
 
-class Detail(db.Model):
-    __tablename__ = 'detail'
-    id = db.Column(db.Integer(), primary_key=True)
-    detail_name = db.Column(db.String(255, collation='NOCASE'), nullable=False, unique=True)
-    cost = db.Column(db.Integer())
+    def __init__(self, component_name, component_unit, component_item):
+        self.component_name = component_name
+        self.component_unit = component_unit
+        self.component_item = component_item
 
-class StockComponents(db.Model):
-    __tablename__ = 'stock_components'
+class Specification(db.Model):
+    __tablename__ = 'specification'
     id = db.Column(db.Integer(), primary_key=True)
-    stock_id = db.Column(db.Integer(), db.ForeignKey('stock.id', ondelete='CASCADE'))
+    component_type = db.Column(db.String(255, collation='NOCASE'))
+    product_id = db.Column(db.Integer(), db.ForeignKey('product.id', ondelete='CASCADE'))
     component_id = db.Column(db.Integer(), db.ForeignKey('component.id', ondelete='CASCADE'))
+    count =  db.Column(db.Float())
+    
 
 
-class Stock(db.Model):
-    __tablename__ = 'stock'
-    id = db.Column(db.Integer(), primary_key=True)
-    components = db.relationship('Component', secondary='stock_components')

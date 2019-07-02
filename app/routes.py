@@ -5,7 +5,8 @@ from flask import render_template, flash, redirect, url_for, request, send_from_
 from flask_user import current_user, login_required, roles_required, UserManager, UserMixin
 from werkzeug.utils import secure_filename
 from werkzeug.urls import url_parse
-from app.models import User, UserRoles, Role
+from app.models import User, UserRoles, Role, Product, Component, Specification
+from app.forms import ProductForm, ComponentForm
 
 
 @app.route('/')
@@ -57,21 +58,67 @@ def member_page():
             """)
 
     # The Admin page requires an 'Admin' role.
-@app.route('/product_form')
-def product_form():
-    return render_template('product_form.html')
-@app.route('/admin')
-@roles_required('Admin')    # Use of @roles_required decorator
-def admin_page():
-    return render_template_string("""
-            {% extends "flask_user_layout.html" %}
-            {% block content %}
-                <h2>{%trans%}Admin Page{%endtrans%}</h2>
-                <p><a href={{ url_for('user.register') }}>{%trans%}Register{%endtrans%}</a></p>
-                <p><a href={{ url_for('user.login') }}>{%trans%}Sign in{%endtrans%}</a></p>
-                <p><a href={{ url_for('home_page') }}>{%trans%}Home Page{%endtrans%}</a> (accessible to anyone)</p>
-                <p><a href={{ url_for('member_page') }}>{%trans%}Member Page{%endtrans%}</a> (login_required: member@example.com / Password1)</p>
-                <p><a href={{ url_for('admin_page') }}>{%trans%}Admin Page{%endtrans%}</a> (role_required: admin@example.com / Password1')</p>
-                <p><a href={{ url_for('user.logout') }}>{%trans%}Sign out{%endtrans%}</a></p>
-            {% endblock %}
-            """)
+@app.route('/product_table')
+def product_table():
+    products = Product.query.all()
+    return render_template('product_table.html', products=products)
+
+@app.route('/create_product', methods = ['GET', 'POST'])
+@login_required
+def create_product():
+    form = ProductForm()
+    if request.method == 'POST':
+        if form.validate() == False:
+            flash('Не заполнены необходимые поля или введены некорректные данные')
+            return render_template('create_product.html', form = form)
+        else:
+            if Product.query.filter(Product.product_name == form.name.data).first() or Product.query.filter(Product.product_item == form.item.data).first():
+                flash('Товар с таким именем или артикулом существует')
+                return render_template('create_product.html', form = form)  
+            else:
+                product = Product(form.name.data, form.power.data, form.item.data, form.weight.data, form.materials.data)
+                db.session.add(product)
+                db.session.commit()
+                return redirect(url_for('product_table'))
+    return render_template('create_product.html', form=form)
+
+@app.route('/component_table')
+def component_table():
+    components = Component.query.all()[::-1]
+    return render_template('component_table.html', components=components)
+
+@app.route('/create_component', methods = ['GET', 'POST'])
+@login_required
+def create_component():
+    form = ComponentForm()
+    if request.method == 'POST':
+        if form.validate() == False:
+            flash('Не заполнены необходимые поля или введены некорректные данные')
+            return render_template('create_component.html', form = form)
+        else:
+            if Component.query.filter(Component.component_name == form.name.data).first() or Component.query.filter(Component.component_item == form.item.data).first():
+                flash('Товар с таким именем или артикулом существует')
+                return render_template('create_component.html', form = form)  
+            else:
+                component = Component(form.name.data, form.unit.data, form.item.data)
+                db.session.add(component)
+                db.session.commit()
+                return redirect(url_for('component_table'))  
+    return render_template('create_component.html', form=form)
+
+@app.route('/product_info')
+def product_info():
+    products = Product.query.all()[::-1]
+    return render_template('product_info.html', products=products)
+
+@app.route('/delete_component/<id>')
+def delete_component(id):
+    Component.query.filter(Component.id == id).delete()
+    db.session.commit()
+    return redirect(url_for('component_table'))  
+
+@app.route('/delete_product/<id>')
+def delete_product(id):
+    Product.query.filter(Product.id == id).delete()
+    db.session.commit()
+    return redirect(url_for('product_table'))  
