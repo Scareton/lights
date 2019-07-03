@@ -6,9 +6,7 @@
 {% block flash_messages %}
 {% with messages = get_flashed_messages() %}
     {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-danger">{{ message|safe }}</div>
-        {% endfor %}
+            <div class="alert alert-danger">{{ messages[-1]|safe }}</div>
     {% endif %}
 {% endwith %}
 {% endblock %}

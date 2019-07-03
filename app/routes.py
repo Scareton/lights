@@ -6,7 +6,7 @@ from flask_user import current_user, login_required, roles_required, UserManager
 from werkzeug.utils import secure_filename
 from werkzeug.urls import url_parse
 from app.models import User, UserRoles, Role, Product, Component, Specification
-from app.forms import ProductForm, ComponentForm
+from app.forms import ProductForm, ComponentForm, SpecificationForm
 
 
 @app.route('/')
@@ -79,8 +79,21 @@ def create_product():
                 product = Product(form.name.data, form.power.data, form.item.data, form.weight.data, form.materials.data)
                 db.session.add(product)
                 db.session.commit()
-                return redirect(url_for('product_table'))
+                return redirect(url_for('product_specification', product = product.id))
     return render_template('create_product.html', form=form)
+
+@app.route('/product_specification/<product>', methods = ['GET', 'POST'])
+def product_specification(product):
+    form = SpecificationForm()
+    if request.method == 'POST':
+        if form.count.data is None:
+            flash('Используйте "," вместо "."')
+            return redirect(url_for('product_specification', product=product, specifications=Specification.query.all()))
+        specification = Specification(form.component_type.data, product, form.detail.data, form.count.data)
+        db.session.add(specification)
+        db.session.commit()
+        return redirect(url_for('product_specification', product=product, specifications=Specification.query.all()))
+    return render_template('product_specification.html', form=form, specifications=Specification.query.all(), product=product)
 
 @app.route('/component_table')
 def component_table():
@@ -116,6 +129,13 @@ def delete_component(id):
     Component.query.filter(Component.id == id).delete()
     db.session.commit()
     return redirect(url_for('component_table'))  
+
+@app.route('/delete_specification/<id>')
+def delete_specification(id):
+    product = Specification.query.filter(Specification.id == id).first().product_id
+    Specification.query.filter(Specification.id == id).delete()
+    db.session.commit()
+    return redirect(url_for('product_specification', product=product))  
 
 @app.route('/delete_product/<id>')
 def delete_product(id):

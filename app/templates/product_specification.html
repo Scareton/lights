@@ -1,0 +1,217 @@
+{%extends 'base.html'%}
+
+
+
+{%block content%}
+{% block flash_messages %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+            <div class="alert alert-danger">{{ messages[-1]|safe }}</div>
+    {% endif %}
+{% endwith %}
+{% endblock %}
+<div class = 'ml-1 mb-3 row'>
+<form action = "" method = post>
+    <fieldset>
+       <legend>Спецификация товара</legend>
+       {{ form.hidden_tag() }}
+
+      <div class="ml-1 row">
+         {{ form.component_type.label(class_="pl-0 mr-1 col-4")}}
+         {{ form.detail.label(class_="mr-3 col-2") }} 
+         {{ form.count.label }}
+      </div> 
+      <div class=" ml-1 row"> 
+         {{ form.component_type(class_="mr-3 col-4") }}
+         {{ form.detail(class_="mr-3") }}
+         {{ form.count(class_="col-2 mr-3") }}
+         {{ form.submit(class_="btn btn-success btn-sm ml-3") }}
+      </div>
+       
+    </fieldset>
+ </form>
+</div>
+
+<div class="row">
+<div class=" m-0 col-6">
+
+   <table class="table table-hover">
+      <h4>Детали корпуса</h4>
+      <thead>
+      <tr>
+            <th scope="col">Деталь</th>
+            <th scope="col">Ед.изм</th>
+            <th scope="col">Кол-во</th>
+            <th></th>
+      </tr>
+      </thead>
+      <tbody>
+         {% for specification in specifications%}
+         {% if specification.product_id == product and specification.component_type == 'Детали корпуса'%}
+         <tr>
+            <th scope="row">{{specification.get_component().component_name}}</th>
+            <td>{{specification.get_component().component_unit}}</td>
+            <td>{{specification.count}}</td>
+            <td>
+               <a href="{{url_for('delete_specification', id = specification.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3">Удалить</button></a>
+            </td>
+         </tr>
+         {%endif%}
+         {%endfor%}
+      <tr>
+      </tr>
+      </tbody>
+   </table>
+</div>
+<div class=" m-0 col-6">
+      <table class="table table-hover">
+               <h4> Электротехнические детали</h4>
+         <thead>
+         <tr>
+            <th scope="col">Деталь</th>
+            <th scope="col">Ед.изм</th>
+            <th scope="col">Кол-во</th>
+            <th></th>
+         </tr>
+         </thead>
+         <tbody>
+         {% for specification in specifications%}
+         {% if specification.product_id == product and specification.component_type == 'Электротехнические детали'%}
+         <tr>
+            <th scope="row">{{specification.get_component().component_name}}</th>
+            <td>{{specification.get_component().component_unit}}</td>
+            <td>{{specification.count}}</td>
+            <td>
+               <a href="{{url_for('delete_specification', id = specification.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3">Удалить</button></a>
+            </td>
+         </tr>
+         {%endif%}
+         {%endfor%}
+         <tr>
+         </tr>
+         </tbody>
+      </table>
+</div>
+<div class=" m-0 col-6">
+      <table class="table table-hover">
+               <h4>Герметики</h4>
+         <thead>
+         <tr>
+            <th scope="col">Деталь</th>
+            <th scope="col">Ед.изм</th>
+            <th scope="col">Кол-во</th>
+            <th></th>
+         </tr>
+         </thead>
+         <tbody>
+         {% for specification in specifications%}
+         {% if specification.product_id == product and specification.component_type == 'Герметики'%}
+         <tr>
+            <th scope="row">{{specification.get_component().component_name}}</th>
+            <td>{{specification.get_component().component_unit}}</td>
+            <td>{{specification.count}}</td>
+            <td>
+               <a href="{{url_for('delete_specification', id = specification.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3">Удалить</button></a>
+            </td>
+         </tr>
+         {%endif%}
+         {%endfor%}
+         <tr>
+         </tr>
+         </tbody>
+      </table>
+</div>
+
+<div class=" m-0 col-6">
+      <table class="table table-hover">
+               <h4>Метизы</h4>
+         <thead>
+         <tr>
+            <th scope="col">Деталь</th>
+            <th scope="col">Ед.изм</th>
+            <th scope="col">Кол-во</th>
+            <th></th>
+         </tr>
+         </thead>
+         <tbody>
+         {% for specification in specifications%}
+         {% if specification.product_id == product and specification.component_type == 'Метизы'%}
+         <tr>
+            <th scope="row">{{specification.get_component().component_name}}</th>
+            <td>{{specification.get_component().component_unit}}</td>
+            <td>{{specification.count}}</td>
+            <td>
+               <a href="{{url_for('delete_specification', id = specification.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3">Удалить</button></a>
+            </td>
+         </tr>
+         {%endif%}
+         {%endfor%}
+         <tr>
+         </tr>
+         </tbody>
+      </table>
+</div>
+
+<div class=" m-0 col-6">
+      <table class="table table-hover">
+               <h4> Упаковка</h4>
+         <thead>
+         <tr>
+            <th scope="col">Деталь</th>
+            <th scope="col">Ед.изм</th>
+            <th scope="col">Кол-во</th>
+            <th></th>
+         </tr>
+         </thead>
+         <tbody>
+         {% for specification in specifications%}
+         {% if specification.product_id == product and specification.component_type == 'Упаковка'%}
+         <tr>
+            <th scope="row">{{specification.get_component().component_name}}</th>
+            <td>{{specification.get_component().component_unit}}</td>
+            <td>{{specification.count}}</td>
+            <td>
+               <a href="{{url_for('delete_specification', id = specification.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3">Удалить</button></a>
+            </td>
+         </tr>
+         {%endif%}
+         {%endfor%}
+         <tr>
+         </tr>
+         </tbody>
+      </table>
+</div>
+
+<div class=" m-0 col-6">
+      <table class="table table-hover">
+               <h4> Расходные материалы</h4>
+         <thead>
+         <tr>
+            <th scope="col">Деталь</th>
+            <th scope="col">Ед.изм</th>
+            <th scope="col">Кол-во</th>
+            <th></th>
+         </tr>
+         </thead>
+         <tbody>
+         {% for specification in specifications%}
+         {% if specification.product_id == product and specification.component_type == 'Расходные материалы'%}
+         <tr>
+            <th scope="row">{{specification.get_component().component_name}}</th>
+            <td>{{specification.get_component().component_unit}}</td>
+            <td>{{specification.count}}</td>
+            <td>
+               <a href="{{url_for('delete_specification', id = specification.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3">Удалить</button></a>
+            </td>
+         </tr>
+         {%endif%}
+         {%endfor%}
+         <tr>
+         </tr>
+         </tbody>
+      </table>
+</div>
+
+</div>
+</div>
+{%endblock%}

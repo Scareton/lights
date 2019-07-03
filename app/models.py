@@ -71,6 +71,18 @@ class Specification(db.Model):
     product_id = db.Column(db.Integer(), db.ForeignKey('product.id', ondelete='CASCADE'))
     component_id = db.Column(db.Integer(), db.ForeignKey('component.id', ondelete='CASCADE'))
     count =  db.Column(db.Float())
+
+    def __init__(self, component_type, product_id, component_id, count):
+        self.component_type = component_type
+        self.product_id = product_id
+        self.component_id = component_id
+        self.count = count
+    
+    def get_component(self):
+        return Component.query.filter(Component.id == self.component_id).first()
+    
+    def get_product(self):
+        return Product.query.filter(Product.id == self.product_id).first()
     
 
 
