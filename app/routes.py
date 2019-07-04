@@ -87,8 +87,8 @@ def product_specification(product):
     form = SpecificationForm()
     if request.method == 'POST':
         if form.count.data is None:
-            flash('Используйте "," вместо "."')
-            return redirect(url_for('product_specification', product=product, specifications=Specification.query.all()))
+            flash('Используйте "." вместо ","')
+            return redirect(url_for('product_specification', product=product, specifications=Specification.query.filter(Specification.product_id==product)))
         specification = Specification(form.component_type.data, product, form.detail.data, form.count.data)
         db.session.add(specification)
         db.session.commit()
@@ -119,10 +119,11 @@ def create_component():
                 return redirect(url_for('component_table'))  
     return render_template('create_component.html', form=form)
 
-@app.route('/product_info')
-def product_info():
-    products = Product.query.all()[::-1]
-    return render_template('product_info.html', products=products)
+@app.route('/product_info/<product>')
+def product_info(product):
+    db_product = Product.query.filter(Product.id==product).first()
+    specifications=Specification.query.filter(Specification.product_id==product)
+    return render_template('product_info.html', product=db_product, specifications=specifications)
 
 @app.route('/delete_component/<id>')
 def delete_component(id):
@@ -139,6 +140,5 @@ def delete_specification(id):
 
 @app.route('/delete_product/<id>')
 def delete_product(id):
-    Product.query.filter(Product.id == id).delete()
-    db.session.commit()
+    Product.delete_product(id)
     return redirect(url_for('product_table'))  

@@ -17,14 +17,13 @@
         <th scope="row">{{product.product_name}}</th>
         <td>{{product.product_item}}</td>
         <td>
-            <a href="{{url_for('product_info', product = product.produt_name)}}"><button type="button" class="btn btn-success btn-sm mr-3">Подробнее</button></a>
+            <a href="{{url_for('product_info', product = product.id)}}"><button type="button" class="btn btn-success btn-sm mr-3">Подробнее</button></a>
             <a href="{{url_for('delete_product', id = product.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3">Удалить</button></a>
         </td>
       </tr>
     {%endfor%}
     <tr>
         <td><div class='col-2 pl-0'><a href="{{url_for('create_product')}}"><button type="button" class="btn btn-success btn-sm mr-3">Добавить</button></a></div></td>
-        <td></td>
         <td></td>
         <td></td>
     </tr>

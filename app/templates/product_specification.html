@@ -10,6 +10,7 @@
     {% endif %}
 {% endwith %}
 {% endblock %}
+
 <div class = 'ml-1 mb-3 row'>
 <form action = "" method = post>
     <fieldset>
@@ -34,7 +35,7 @@
 
 <div class="row">
 <div class=" m-0 col-6">
-
+  
    <table class="table table-hover">
       <h4>Детали корпуса</h4>
       <thead>
@@ -47,7 +48,7 @@
       </thead>
       <tbody>
          {% for specification in specifications%}
-         {% if specification.product_id == product and specification.component_type == 'Детали корпуса'%}
+         {% if specification.component_type == 'Детали корпуса'%}
          <tr>
             <th scope="row">{{specification.get_component().component_name}}</th>
             <td>{{specification.get_component().component_unit}}</td>
@@ -76,7 +77,7 @@
          </thead>
          <tbody>
          {% for specification in specifications%}
-         {% if specification.product_id == product and specification.component_type == 'Электротехнические детали'%}
+         {% if specification.component_type == 'Электротехнические детали'%}
          <tr>
             <th scope="row">{{specification.get_component().component_name}}</th>
             <td>{{specification.get_component().component_unit}}</td>
@@ -105,7 +106,7 @@
          </thead>
          <tbody>
          {% for specification in specifications%}
-         {% if specification.product_id == product and specification.component_type == 'Герметики'%}
+         {% if specification.component_type == 'Герметики'%}
          <tr>
             <th scope="row">{{specification.get_component().component_name}}</th>
             <td>{{specification.get_component().component_unit}}</td>
@@ -135,7 +136,7 @@
          </thead>
          <tbody>
          {% for specification in specifications%}
-         {% if specification.product_id == product and specification.component_type == 'Метизы'%}
+         {% if specification.component_type == 'Метизы'%}
          <tr>
             <th scope="row">{{specification.get_component().component_name}}</th>
             <td>{{specification.get_component().component_unit}}</td>
@@ -165,7 +166,7 @@
          </thead>
          <tbody>
          {% for specification in specifications%}
-         {% if specification.product_id == product and specification.component_type == 'Упаковка'%}
+         {% if specification.component_type == 'Упаковка'%}
          <tr>
             <th scope="row">{{specification.get_component().component_name}}</th>
             <td>{{specification.get_component().component_unit}}</td>
@@ -195,7 +196,7 @@
          </thead>
          <tbody>
          {% for specification in specifications%}
-         {% if specification.product_id == product and specification.component_type == 'Расходные материалы'%}
+         {% if specification.component_type == 'Расходные материалы'%}
          <tr>
             <th scope="row">{{specification.get_component().component_name}}</th>
             <td>{{specification.get_component().component_unit}}</td>

@@ -1,0 +1,174 @@
+{%extends 'base.html'%}
+
+{%block content%}
+<div class="row">
+    
+<div class = ' col-4'>
+        <div class="col"><p>Наименование: <span>{{product.product_name}}</span></p></div>
+        <div class="col"><p>Артикул: <span>{{product.product_item}}</span></p></div>
+        <div class="col"><p>Материал <span>{{product.product_material}}</span></p></div>
+        <div class="col"><p>Мощность: <span>{{product.product_power}}</span></p></div>
+        <div class="col"><p>Вес: <span>{{product.product_weight}}</span></p></div>
+        <div class="col">
+            <div class="p-0 col"><a href="{{url_for('product_specification', product = product.id)}}"><button type="button" class="btn btn-success btn-sm mr-3">Изменить спецификацию</button></a></div>
+            <div class="p-0 col mt-2"><a href="{{url_for('delete_product', id = product.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3">Удалить</button></a></div>
+        </div>
+    </div>
+<div class=" m-0 col-8">
+    <div class=" m-0 col">
+      
+       <table class="table table-hover">
+          <h4>Детали корпуса</h4>
+          <thead>
+          <tr>
+                <th scope="col">Деталь</th>
+                <th scope="col">Ед.изм</th>
+                <th scope="col">Кол-во</th>
+          </tr>
+          </thead>
+          <tbody>
+             {% for specification in specifications%}
+             {% if specification.component_type == 'Детали корпуса'%}
+             <tr>
+                <th scope="row">{{specification.get_component().component_name}}</th>
+                <td>{{specification.get_component().component_unit}}</td>
+                <td>{{specification.count}}</td>
+             </tr>
+             {%endif%}
+             {%endfor%}
+          <tr>
+          </tr>
+          </tbody>
+       </table>
+    </div>
+    <div class=" m-0 col">
+          <table class="table table-hover">
+                   <h4> Электротехнические детали</h4>
+             <thead>
+             <tr>
+                <th scope="col">Деталь</th>
+                <th scope="col">Ед.изм</th>
+                <th scope="col">Кол-во</th>
+             </tr>
+             </thead>
+             <tbody>
+             {% for specification in specifications%}
+             {% if specification.component_type == 'Электротехнические детали'%}
+             <tr>
+                <th scope="row">{{specification.get_component().component_name}}</th>
+                <td>{{specification.get_component().component_unit}}</td>
+                <td>{{specification.count}}</td>
+             </tr>
+             {%endif%}
+             {%endfor%}
+             <tr>
+             </tr>
+             </tbody>
+          </table>
+    </div>
+    <div class=" m-0 col">
+          <table class="table table-hover">
+                   <h4>Герметики</h4>
+             <thead>
+             <tr>
+                <th scope="col">Деталь</th>
+                <th scope="col">Ед.изм</th>
+                <th scope="col">Кол-во</th>
+             </tr>
+             </thead>
+             <tbody>
+             {% for specification in specifications%}
+             {% if specification.component_type == 'Герметики'%}
+             <tr>
+                <th scope="row">{{specification.get_component().component_name}}</th>
+                <td>{{specification.get_component().component_unit}}</td>
+                <td>{{specification.count}}</td>
+             </tr>
+             {%endif%}
+             {%endfor%}
+             <tr>
+             </tr>
+             </tbody>
+          </table>
+    </div>
+    
+    <div class=" m-0 col">
+          <table class="table table-hover">
+                   <h4>Метизы</h4>
+             <thead>
+             <tr>
+                <th scope="col">Деталь</th>
+                <th scope="col">Ед.изм</th>
+                <th scope="col">Кол-во</th>
+             </tr>
+             </thead>
+             <tbody>
+             {% for specification in specifications%}
+             {% if specification.component_type == 'Метизы'%}
+             <tr>
+                <th scope="row">{{specification.get_component().component_name}}</th>
+                <td>{{specification.get_component().component_unit}}</td>
+                <td>{{specification.count}}</td>
+             </tr>
+             {%endif%}
+             {%endfor%}
+             <tr>
+             </tr>
+             </tbody>
+          </table>
+    </div>
+    
+    <div class=" m-0 col">
+          <table class="table table-hover">
+                   <h4> Упаковка</h4>
+             <thead>
+             <tr>
+                <th scope="col">Деталь</th>
+                <th scope="col">Ед.изм</th>
+                <th scope="col">Кол-во</th>
+             </tr>
+             </thead>
+             <tbody>
+             {% for specification in specifications%}
+             {% if specification.component_type == 'Упаковка'%}
+             <tr>
+                <th scope="row">{{specification.get_component().component_name}}</th>
+                <td>{{specification.get_component().component_unit}}</td>
+                <td>{{specification.count}}</td>
+             </tr>
+             {%endif%}
+             {%endfor%}
+             <tr>
+             </tr>
+             </tbody>
+          </table>
+    </div>
+    
+    <div class=" m-0 col">
+          <table class="table table-hover">
+                   <h4> Расходные материалы</h4>
+             <thead>
+             <tr>
+                <th scope="col">Деталь</th>
+                <th scope="col">Ед.изм</th>
+                <th scope="col">Кол-во</th>
+             </tr>
+             </thead>
+             <tbody>
+             {% for specification in specifications%}
+             {% if specification.component_type == 'Расходные материалы'%}
+             <tr>
+                <th scope="row">{{specification.get_component().component_name}}</th>
+                <td>{{specification.get_component().component_unit}}</td>
+                <td>{{specification.count}}</td>
+             </tr>
+             {%endif%}
+             {%endfor%}
+             <tr>
+             </tr>
+             </tbody>
+          </table>
+    </div>
+    </div>
+    </div>
+{%endblock%}

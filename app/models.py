@@ -52,6 +52,16 @@ class Product(db.Model):
         self.product_weight = product_weight
         self.product_material = product_material
 
+    def delete_product(id):
+        specification = Specification.query.filter(Specification.product_id==id).first()
+        while specification:
+            Specification.query.filter(Specification.product_id==id).delete()
+            specification = Specification.query.filter(Specification.product_id==id).first()
+        Product.query.filter(Product.id==id).delete()
+        db.session.commit()  
+
+
+
 class Component(db.Model):
     __tablename__ = 'component'
     id = db.Column(db.Integer(), primary_key=True)
@@ -83,6 +93,7 @@ class Specification(db.Model):
     
     def get_product(self):
         return Product.query.filter(Product.id == self.product_id).first()
-    
+
+
 
 
