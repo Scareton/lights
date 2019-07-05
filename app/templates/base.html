@@ -20,9 +20,7 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="{{ url_for('home_page') }}">Главная <span class="sr-only"></span></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('users_table') }}">Таблица пользователей</a>
-                </li>
+                
                 <li class="nav-item">
                     <a class="nav-link" href="{{url_for('component_table')}}">Комплектующие</a>
                 </li>
@@ -30,9 +28,9 @@
                         <a class="nav-link" href="{{url_for('product_table')}}">Товары</a>
                     </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown05" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                    <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown05" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Админ</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown05">
-                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item"  href="{{ url_for('users_table') }}">Таблица пользователей</a>
                     <a class="dropdown-item" href="#">Another action</a>
                     <a class="dropdown-item" href="#">Something else here</a>
                     </div>
@@ -44,14 +42,16 @@
                                     &nbsp; | &nbsp;
                                     <a class="text-light" href="{{ url_for('user.logout') }}">{%trans%}Выход{%endtrans%}</a>
                                 {% else %}
+                                    <a class="text-light" href="{{ url_for('user.register') }}">Регистрация</a>
+                                    &nbsp; | &nbsp;
                                     <a class="text-light" href="{{ url_for('user.login') }}">{%trans%}Вход{%endtrans%}</a>
                                 {% endif %}
                             </div>
             </div>
             </nav>
-  <main role="main" class="container mt-4">
+  <div class="container mt-4">
     {% block content %}{% endblock %}
-  </main>
+  </div>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script>window.jQuery || document.write('<script src="/docs/4.3.1/assets/js/vendor/jquery-slim.min.js"><\/script>')</script><script src="/docs/4.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

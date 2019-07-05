@@ -2,12 +2,19 @@
 
 
 {%block content%}
-
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{url_for('component_table')}}">Комплектующие</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Добавление комплектующего</li>
+    </ol>
+  </nav>
 {% block flash_messages %}
 {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for message in messages %}
+            {%if 'success' not in message and 'must' not in message%}
             <div class="alert alert-danger">{{ message|safe }}</div>
+            {%endif%}
         {% endfor %}
     {% endif %}
 {% endwith %}

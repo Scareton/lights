@@ -26,6 +26,8 @@ def choise_query():
 class SpecificationForm(Form):
     component_type = SelectField('Тип компонента', choices = [('Детали корпуса','Детали корпуса'),  ('Электротехнические детали','Электротехнические детали'),
     ('Герметики', 'Герметики'), ('Метизы', 'Метизы'), ('Упаковка', 'Упаковка'), ('Расходные материалы', 'Расходные материалы')])
-    detail = SelectField('Деталь', choices=[(component.id, component.component_name) for component in choise_query()])
+    #detail = SelectField('Деталь', choices=[(component.id, component.component_name) for component in components])
+    detail = QuerySelectField(query_factory=lambda: Component.query.all(), get_label='component_name', get_pk=lambda a: a.id)
+    #detail = SelectField('Деталь')
     count = FloatField('Количество', [validators.Required("Введите количество деталей")])
     submit = SubmitField("Добавить")

@@ -10,6 +10,7 @@ from app.forms import ProductForm, ComponentForm, SpecificationForm
 
 
 @app.route('/')
+@login_required
 def home_page():
     return render_template('index.html')
 
@@ -41,24 +42,8 @@ def append_role(user, role):
     return redirect(url_for('roles_form', user=user))
 
 
-@app.route('/members')
-@login_required    # Use of @login_required decorator
-def member_page():
-    return render_template_string("""
-            {% extends "flask_user_layout.html" %}
-            {% block content %}
-                <h2>{%trans%}Members page{%endtrans%}</h2>
-                <p><a href={{ url_for('user.register') }}>{%trans%}Register{%endtrans%}</a></p>
-                <p><a href={{ url_for('user.login') }}>{%trans%}Sign in{%endtrans%}</a></p>
-                <p><a href={{ url_for('home_page') }}>{%trans%}Home Page{%endtrans%}</a> (accessible to anyone)</p>
-                <p><a href={{ url_for('member_page') }}>{%trans%}Member Page{%endtrans%}</a> (login_required: member@example.com / Password1)</p>
-                <p><a href={{ url_for('admin_page') }}>{%trans%}Admin Page{%endtrans%}</a> (role_required: admin@example.com / Password1')</p>
-                <p><a href={{ url_for('user.logout') }}>{%trans%}Sign out{%endtrans%}</a></p>
-            {% endblock %}
-            """)
-
-    # The Admin page requires an 'Admin' role.
 @app.route('/product_table')
+@login_required
 def product_table():
     products = Product.query.all()
     return render_template('product_table.html', products=products)
@@ -83,19 +68,21 @@ def create_product():
     return render_template('create_product.html', form=form)
 
 @app.route('/product_specification/<product>', methods = ['GET', 'POST'])
+@login_required
 def product_specification(product):
     form = SpecificationForm()
     if request.method == 'POST':
         if form.count.data is None:
             flash('Используйте "." вместо ","')
-            return redirect(url_for('product_specification', product=product, specifications=Specification.query.filter(Specification.product_id==product)))
-        specification = Specification(form.component_type.data, product, form.detail.data, form.count.data)
+            return redirect(url_for('product_specification', product=product, specifications=Specification.query.filter(Specification.product_id==product) ))
+        specification = Specification(form.component_type.data, product, form.detail.data.id, form.count.data)
         db.session.add(specification)
         db.session.commit()
-        return redirect(url_for('product_specification', product=product, specifications=Specification.query.all()))
-    return render_template('product_specification.html', form=form, specifications=Specification.query.all(), product=product)
+        return redirect(url_for('product_specification', product=product, specifications=Specification.query.filter(Specification.product_id==product)))
+    return render_template('product_specification.html', form=form, specifications=Specification.query.filter(Specification.product_id==product), product=product)
 
 @app.route('/component_table')
+@login_required
 def component_table():
     components = Component.query.all()[::-1]
     return render_template('component_table.html', components=components)
@@ -120,18 +107,20 @@ def create_component():
     return render_template('create_component.html', form=form)
 
 @app.route('/product_info/<product>')
+@login_required
 def product_info(product):
     db_product = Product.query.filter(Product.id==product).first()
     specifications=Specification.query.filter(Specification.product_id==product)
     return render_template('product_info.html', product=db_product, specifications=specifications)
 
 @app.route('/delete_component/<id>')
+@login_required
 def delete_component(id):
-    Component.query.filter(Component.id == id).delete()
-    db.session.commit()
+    Component.delete_component(id)
     return redirect(url_for('component_table'))  
 
 @app.route('/delete_specification/<id>')
+@login_required
 def delete_specification(id):
     product = Specification.query.filter(Specification.id == id).first().product_id
     Specification.query.filter(Specification.id == id).delete()
@@ -139,6 +128,7 @@ def delete_specification(id):
     return redirect(url_for('product_specification', product=product))  
 
 @app.route('/delete_product/<id>')
+@login_required
 def delete_product(id):
     Product.delete_product(id)
     return redirect(url_for('product_table'))  

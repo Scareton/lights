@@ -3,11 +3,21 @@
 
 
 {%block content%}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{url_for('product_table')}}">Товары</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Добавление товара</li>
+    </ol>
+  </nav>
 {% block flash_messages %}
 {% with messages = get_flashed_messages() %}
-    {% if messages %}
-            <div class="alert alert-danger">{{ messages[-1]|safe }}</div>
-    {% endif %}
+   {% if messages %}
+         {% for message in messages %}
+            {%if 'success' not in message and 'must' not in message%}
+            <div class="alert alert-danger">{{ message|safe }}</div>
+            {%endif%}
+         {% endfor %}
+   {% endif %}
 {% endwith %}
 {% endblock %}
 <form action = "" method = post>

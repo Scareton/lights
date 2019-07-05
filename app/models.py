@@ -73,6 +73,14 @@ class Component(db.Model):
         self.component_name = component_name
         self.component_unit = component_unit
         self.component_item = component_item
+    
+    def delete_component(id):
+        specification = Specification.query.filter(Specification.component_id==id).first()
+        while specification:
+            Specification.query.filter(Specification.component_id==id).delete()
+            specification = Specification.query.filter(Specification.component_id==id).first()
+        Component.query.filter(Component.id==id).delete()
+        db.session.commit()  
 
 class Specification(db.Model):
     __tablename__ = 'specification'
