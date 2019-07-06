@@ -20,32 +20,27 @@
    {% endif %}
 {% endwith %}
 {% endblock %}
+<div class='col-6 mb-4'>
 <form action = "" method = post>
     <fieldset>
-       <legend>Добавить товар</legend>
        {{ form.hidden_tag() }}
        
-       <div style = font-size:20px; font-weight:bold; margin-left:150px;>
-          {{ form.name.label }}<br>
-          {{ form.name }}
-          <br>
+       
+          {{ form.name.label(class_="control-label") }}<br>
+          {{ form.name(class_=" form-control mr-2") }}
           
-          {{ form.item.label }} {{ form.item }}
-          <br>
-          {{ form.power.label }} {{ form.power }}
-          <br>
-          {{ form.materials.label }}
-          {{ form.materials }}
-          <br>
+          {{ form.item.label(class_="control-label mt-2") }} {{ form.item(class_=" form-control mr-2") }}
+          {{ form.power.label(class_="control-label mt-2") }} {{ form.power(class_=" form-control  mr-2") }}
+          {{ form.materials.label(class_="control-label") }}
+          {{ form.materials(class_="form-control selectpicker mr-3") }}
 
-          {{ form.weight.label }}
-          {{ form.weight }}
-          <br>
+          {{ form.weight.label(class_="control-label mt-2") }}
+          {{ form.weight(class_=" form-control  mr-2") }}
           
-          <br>
-          {{ form.submit }}
-       </div>
+          {{ form.submit(class_="btn btn-success btn-sm mt-2") }}
        
     </fieldset>
  </form>
+ 
+</div>
 {%endblock%}

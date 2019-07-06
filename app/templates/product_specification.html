@@ -22,20 +22,14 @@
  {% endblock %}
 
 <div class = 'ml-1 mb-3 row'>
-<form action = "" method = post>
+<form class='form-inline' action = "" method = post>
     <fieldset>
        <legend>Спецификация товара</legend>
        {{ form.hidden_tag() }}
-
-      <div class="ml-1 row">
-         {{ form.component_type.label(class_="pl-0 mr-1 col-4")}}
-         {{ form.detail.label(class_="mr-3 col-2") }} 
-         {{ form.count.label }}
-      </div> 
       <div class=" ml-1 row"> 
-         {{ form.component_type(class_="mr-3 col-4") }}
-         {{ form.detail(class_="mr-3") }}
-         {{ form.count(class_="col-2 mr-3") }}
+         {{ form.component_type(class_="form-control selectpicker mr-3 col-4") }}
+         {{ form.detail(class_="form-control selectpicker mr-3") }}
+         {{ form.count(class_=" form-control col-2 mr-2") }}
          {{ form.submit(class_="btn btn-success btn-sm ml-3") }}
       </div>
        

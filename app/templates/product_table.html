@@ -12,7 +12,7 @@
       </tr>
     </thead>
     <tbody>
-    {% for product in products%}
+    {% for product in products[::-1]%}
       <tr>
         <th scope="row">{{product.product_name}}</th>
         <td>{{product.product_item}}</td>
