@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 <div class="col">
-<table class="table table-hover">
+<table class="table table-hover table-responsive">
     <thead>
       <tr>
         <th scope="col">Наименование</th>
@@ -18,7 +18,7 @@
         <td>{{product.product_item}}</td>
         <td>
             <a href="{{url_for('product_info', product = product.id)}}"><button type="button" class="btn btn-success btn-sm mr-3">Подробнее</button></a>
-            <a href="{{url_for('delete_product', id = product.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3">Удалить</button></a>
+            <a href="{{url_for('delete_product', id = product.id)}}"><button type="button" class="btn btn-danger btn-sm">Удалить</button></a>
         </td>
       </tr>
     {%endfor%}
