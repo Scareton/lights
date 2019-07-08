@@ -6,15 +6,15 @@
 <table class="table table-sm table-hover">
     <thead>
       <tr>
-        <th scope="col">Наименование</th>
-        <th scope="col">Артикул</th>
-        <th></th>
+        <td scope="col">Наименование</td>
+        <td scope="col">Артикул</td>
+        <td></td>
       </tr>
     </thead>
     <tbody>
     {% for product in products[::-1]%}
       <tr>
-        <th scope="row">{{product.product_name}}</th>
+        <td scope="row">{{product.product_name}}</td>
         <td>{{product.product_item}}</td>
         <td>
             <a href="{{url_for('product_info', product = product.id)}}"><button type="button" class="btn btn-success btn-sm mr-3">Подробнее</button></a>

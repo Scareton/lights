@@ -6,16 +6,16 @@
 <table class="table table-sm table-hover   ">
     <thead>
       <tr>
-        <th scope="col">Наименование</th>
-        <th scope="col">Единицы измерения</th>
-        <th scope="col">Артикул</th>
-        <th></th>
+        <td scope="col">Наименование</td>
+        <td scope="col">Единицы измерения</td>
+        <td scope="col">Артикул</td>
+        <td></td>
       </tr>
     </thead>
     <tbody>
     {% for component in components%}
       <tr>
-        <th scope="row">{{component.component_name}}</th>
+        <td scope="row">{{component.component_name}}</td>
         <td>{{component.component_unit}}</td>
         <td>{{component.component_item}}</td>
         <td>
