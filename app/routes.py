@@ -14,6 +14,12 @@ from app.forms import ProductForm, ComponentForm, SpecificationForm
 def home_page():
     return render_template('index.html')
 
+@app.route('/search')
+@login_required
+def search():
+    components = Component.query.all()
+    return render_template('search_component.html', components=components)
+
 @app.route('/users_table')
 @roles_required('Admin')
 def users_table():
@@ -64,22 +70,27 @@ def create_product():
                 product = Product(form.name.data, form.power.data, form.item.data, form.weight.data, form.materials.data)
                 db.session.add(product)
                 db.session.commit()
-                return redirect(url_for('product_specification', product = product.id))
+                return redirect(url_for('product_specification', product = product.id, det = 'hollow'))
     return render_template('create_product.html', form=form)
 
-@app.route('/product_specification/<product>', methods = ['GET', 'POST'])
+@app.route('/product_specification/<product>/<det>', methods = ['GET', 'POST'])
 @login_required
-def product_specification(product):
+def product_specification(product, det):
     form = SpecificationForm()
+    if det == 'hollow':
+        component_name = det
+    else:
+        component_name = Component.query.filter(Component.id==det).first().component_name
+    components = Component.query.all()
     if request.method == 'POST':
         if form.count.data is None:
             flash('Используйте "." вместо ","')
-            return redirect(url_for('product_specification', product=product, specifications=Specification.query.filter(Specification.product_id==product) ))
-        specification = Specification(form.component_type.data, product, form.detail.data.id, form.count.data)
+            return redirect(url_for('product_specification', product=product,component_name=component_name, components=components, specifications=Specification.query.filter(Specification.product_id==product) ))
+        specification = Specification(form.component_type.data, product, det, form.count.data)
         db.session.add(specification)
         db.session.commit()
-        return redirect(url_for('product_specification', product=product, specifications=Specification.query.filter(Specification.product_id==product)))
-    return render_template('product_specification.html', form=form, specifications=Specification.query.filter(Specification.product_id==product), product=product)
+        return redirect(url_for('product_specification',component_name=component_name, det='hollow', product=product,components=components, specifications=Specification.query.filter(Specification.product_id==product)))
+    return render_template('product_specification.html',component_name=component_name,det='hollow', form=form, components=components, specifications=Specification.query.filter(Specification.product_id==product), product=product)
 
 @app.route('/component_table')
 @login_required
@@ -125,7 +136,7 @@ def delete_specification(id):
     product = Specification.query.filter(Specification.id == id).first().product_id
     Specification.query.filter(Specification.id == id).delete()
     db.session.commit()
-    return redirect(url_for('product_specification', product=product))  
+    return redirect(url_for('product_specification', product=product, det='hollow'))  
 
 @app.route('/delete_product/<id>')
 @login_required

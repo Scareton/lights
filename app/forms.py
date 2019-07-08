@@ -24,10 +24,16 @@ def choise_query():
     return Component.query.all()
 
 class SpecificationForm(Form):
+    det = 'hollow'
+
+    def make_det(self,det):
+        self.det=det
+
     component_type = SelectField('Тип компонента', choices = [('Детали корпуса','Детали корпуса'),  ('Электротехнические детали','Электротехнические детали'),
     ('Герметики', 'Герметики'), ('Метизы', 'Метизы'), ('Упаковка', 'Упаковка'), ('Расходные материалы', 'Расходные материалы')])
     #detail = SelectField('Деталь', choices=[(component.id, component.component_name) for component in components])
-    detail = QuerySelectField(query_factory=lambda: Component.query.all(), get_label='component_name', get_pk=lambda a: a.id)
+    #detail = QuerySelectField(query_factory=lambda: Component.query.all(), get_label='component_name', get_pk=lambda a: a.id)
     #detail = SelectField('Деталь')
+    detail = TextField(det,[validators.Required("Введите наименование детали")])
     count = FloatField('Количество', [validators.Required("Введите количество деталей")])
     submit = SubmitField("Добавить")
