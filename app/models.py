@@ -76,13 +76,17 @@ class Component(db.Model):
     
     def delete_component(id):
         specification = Specification.query.filter(Specification.component_id==id).first()
-        modal = ModalComponent.query.filter(ModalComponent.child_id==id or ModalComponent.parrent_id==id).first()
+        child = ModalComponent.query.filter(ModalComponent.child_id==id).first()
+        parrent = ModalComponent.query.filter(ModalComponent.parrent_id==id).first()
         while specification:
             Specification.query.filter(Specification.component_id==id).delete()
             specification = Specification.query.filter(Specification.component_id==id).first()
-        while modal:
-            ModalComponent.query.filter(ModalComponent.child_id==id or ModalComponent.parrent_id==id).delete()
-            modal = ModalComponent.query.filter(ModalComponent.child_id==id or ModalComponent.parrent_id==id).first()
+        while child:
+            ModalComponent.query.filter(ModalComponent.child_id==id).delete()
+            child = ModalComponent.query.filter(ModalComponent.child_id==id).first()
+        while parrent:
+            ModalComponent.query.filter(ModalComponent.parrent_id==id).delete()
+            parrent = ModalComponent.query.filter(ModalComponent.parrent_id==id).first()
         Component.query.filter(Component.id==id).delete()
         db.session.commit()  
 

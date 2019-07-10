@@ -76,6 +76,7 @@ def create_product():
 @app.route('/product_specification/<product>/<det>', methods = ['GET', 'POST'])
 @login_required
 def product_specification(product, det):
+    modal = ModalComponent.query.first()
     form = SpecificationForm()
     if det == 'hollow':
         component_name = det
@@ -85,12 +86,12 @@ def product_specification(product, det):
     if request.method == 'POST':
         if form.count.data is None:
             flash('Используйте "." вместо ","')
-            return redirect(url_for('product_specification', product=product,component_name=component_name, components=components, specifications=Specification.query.filter(Specification.product_id==product) ))
+            return redirect(url_for('product_specification', modal=modal, product=product,component_name=component_name, components=components, specifications=Specification.query.filter(Specification.product_id==product) ))
         specification = Specification(form.component_type.data, product, det, form.count.data)
         db.session.add(specification)
         db.session.commit()
-        return redirect(url_for('product_specification',component_name=component_name, det='hollow', product=product,components=components, specifications=Specification.query.filter(Specification.product_id==product)))
-    return render_template('product_specification.html',component_name=component_name,det='hollow', form=form, components=components, specifications=Specification.query.filter(Specification.product_id==product), product=product)
+        return redirect(url_for('product_specification', modal=modal, component_name=component_name, det='hollow', product=product,components=components, specifications=Specification.query.filter(Specification.product_id==product)))
+    return render_template('product_specification.html', modal=modal, component_name=component_name,det='hollow', form=form, components=components, specifications=Specification.query.filter(Specification.product_id==product), product=product)
 
 @app.route('/component_table')
 @login_required
@@ -123,7 +124,8 @@ def create_component():
 def product_info(product):
     db_product = Product.query.filter(Product.id==product).first()
     specifications=Specification.query.filter(Specification.product_id==product)
-    return render_template('product_info.html', product=db_product, specifications=specifications)
+    modal = ModalComponent.query.first()
+    return render_template('product_info.html', product=db_product, modal=modal, specifications=specifications)
 
 @app.route('/delete_component/<id>')
 @login_required
@@ -150,6 +152,7 @@ def delete_product(id):
 @login_required
 def create_modal_component(modal_component, det):
     form = SpecificationForm()
+    component_name = ''
     if det == 'hollow':
         component_name = det
     else:
