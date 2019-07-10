@@ -18,7 +18,21 @@
         <td>{{product.product_item}}</td>
         <td>
             <a href="{{url_for('product_info', product = product.id)}}"><button type="button" class="btn btn-success btn-sm mr-3">Подробнее</button></a>
-            <a href="{{url_for('delete_product', id = product.id)}}"><button type="button" class="btn btn-danger btn-sm">Удалить</button></a>
+            
+            <button type="button" class="btn btn-danger btn-sm mr-3" data-toggle="modal" data-target="#exampleModal">Удалить</button>
+               <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                 <div class="modal-dialog modal-sm" role="document">
+                   <div class="modal-content">
+                     <div class="modal-header text-center">
+                       <h5 class="modal-title" id="exampleModalLabel">Удалить товар?</h5>
+                     </div>
+                     <div class="modal-footer">
+                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
+                       <a href="{{url_for('delete_product', id=product.id)}}"><button type="button" class="btn btn-danger">Удалить</button></a>
+                     </div>
+                   </div>
+                 </div>
+               </div>
         </td>
       </tr>
     {%endfor%}

@@ -1,6 +1,5 @@
 {%extends "base.html" %}
 {% block content %}
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 
 <table class="table table-sm table-hover   ">
@@ -19,7 +18,24 @@
         <td>{{component.component_unit}}</td>
         <td>{{component.component_item}}</td>
         <td>
-            <a href="{{url_for('delete_component', id = component.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3">Удалить</button></a>
+            {%if modal_component.get_children(component.id)%}
+            <a href="{{url_for('component_info', component=component.id)}}"><button type="button" class="btn btn-success btn-sm mr-2">Составляющие</button></a>
+            {%endif%}
+            <a href="{{url_for('delete_component', id = component.id)}}"><button type="button" class="btn btn-sm btn-danger">Удалить</button></a>
+            <!--<button type="button" class="btn btn-danger btn-sm mr-3" data-toggle="{{component.component_id}}" data-target="{{'#'+component.component_name}}">Удалить</button>
+            <div class="modal fade" id='{{component.component_name}}' tabindex="-1" role="dialog" aria-labelledby="{{component.component_name+'Label'}}" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header text-center">
+                    <h5 class="modal-title">Удалить компонент?</h5>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-rcdismiss="{{component.component_id}}">Отменить</button>
+                    <a href="{{url_for('delete_component', id = component.id)}}"><button type="button" class="btn btn-danger">Удалить</button></a>
+                  </div>
+                </div>
+              </div>
+            </div>-->
         </td>
       </tr>
     {%endfor%}

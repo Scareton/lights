@@ -76,9 +76,13 @@ class Component(db.Model):
     
     def delete_component(id):
         specification = Specification.query.filter(Specification.component_id==id).first()
+        modal = ModalComponent.query.filter(ModalComponent.child_id==id or ModalComponent.parrent_id==id).first()
         while specification:
             Specification.query.filter(Specification.component_id==id).delete()
             specification = Specification.query.filter(Specification.component_id==id).first()
+        while modal:
+            ModalComponent.query.filter(ModalComponent.child_id==id or ModalComponent.parrent_id==id).delete()
+            modal = ModalComponent.query.filter(ModalComponent.child_id==id or ModalComponent.parrent_id==id).first()
         Component.query.filter(Component.id==id).delete()
         db.session.commit()  
 
@@ -102,6 +106,27 @@ class Specification(db.Model):
     def get_product(self):
         return Product.query.filter(Product.id == self.product_id).first()
 
+class ModalComponent(db.Model):
+    __tablename__ = 'modalcomponent'
+    id = db.Column(db.Integer(), primary_key=True)
+    parrent_id = db.Column(db.Integer(), db.ForeignKey('component.id', ondelete='CASCADE'))
+    child_id = db.Column(db.Integer(), db.ForeignKey('component.id', ondelete='CASCADE'))
+    count =  db.Column(db.Float())
 
+    def __init__(self, parrent_id, child_id, count):
+        self.parrent_id = parrent_id
+        self.child_id = child_id
+        self.count = count
+    
+    @staticmethod
+    def get_children(id):
+        children = []
+        if ModalComponent.query.filter(ModalComponent.parrent_id==id).first():
+            for parrent in ModalComponent.query.filter(ModalComponent.parrent_id==id).all():
+                children.append(Component.query.filter(Component.id == parrent.child_id).first())
+            return children
+        return False
+    def get_component(self):
+        return Component.query.filter(Component.id == self.child_id).first()
 
 
