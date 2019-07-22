@@ -89,6 +89,10 @@ class Component(db.Model):
             parrent = ModalComponent.query.filter(ModalComponent.parrent_id==id).first()
         Component.query.filter(Component.id==id).delete()
         db.session.commit()  
+    
+    def get_children(self, id):
+        return False
+    
 
 class Specification(db.Model):
     __tablename__ = 'specification'
@@ -109,6 +113,10 @@ class Specification(db.Model):
     
     def get_product(self):
         return Product.query.filter(Product.id == self.product_id).first()
+    
+    
+    def get_children(self, id):
+        return ModalComponent.get_children(self.component_id)
 
 class ModalComponent(db.Model):
     __tablename__ = 'modalcomponent'
