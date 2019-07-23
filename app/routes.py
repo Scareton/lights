@@ -76,6 +76,7 @@ def create_product():
 @app.route('/product_specification/<product>/<det>', methods = ['GET', 'POST'])
 @login_required
 def product_specification(product, det):
+    modal = ModalComponent.query.first()
     form = SpecificationForm()
     if det == 'hollow':
         component_name = det
@@ -85,12 +86,16 @@ def product_specification(product, det):
     if request.method == 'POST':
         if form.count.data is None:
             flash('Используйте "." вместо ","')
-            return redirect(url_for('product_specification', product=product,component_name=component_name, components=components, specifications=Specification.query.filter(Specification.product_id==product) ))
+            return redirect(url_for('product_specification', modal=modal, product=product,component_name=component_name, components=components, specifications=Specification.query.filter(Specification.product_id==product) ))
+        # if Specification.query.filter(Specification.product_id == product and Specification.component_id == det).first().component_type == form.component_type.data:
+        #     Specification.query.filter(Specification.product_id == product and Specification.component_id == det).first().count+=form.count.data
+        #     db.session.commit()
+        # else:
         specification = Specification(form.component_type.data, product, det, form.count.data)
         db.session.add(specification)
         db.session.commit()
-        return redirect(url_for('product_specification',component_name=component_name, det='hollow', product=product,components=components, specifications=Specification.query.filter(Specification.product_id==product)))
-    return render_template('product_specification.html',component_name=component_name,det='hollow', form=form, components=components, specifications=Specification.query.filter(Specification.product_id==product), product=product)
+        return redirect(url_for('product_specification', modal=modal, component_name=component_name, det='hollow', product=product,components=components, specifications=Specification.query.filter(Specification.product_id==product)))
+    return render_template('product_specification.html', modal=modal, component_name=component_name,det='hollow', form=form, components=components, specifications=Specification.query.filter(Specification.product_id==product), product=product)
 
 @app.route('/component_table')
 @login_required
@@ -121,9 +126,12 @@ def create_component():
 @app.route('/product_info/<product>')
 @login_required
 def product_info(product):
+    det = {}
     db_product = Product.query.filter(Product.id==product).first()
-    specifications=Specification.query.filter(Specification.product_id==product)
-    return render_template('product_info.html', product=db_product, specifications=specifications)
+    specifications=Specification.query.filter(Specification.product_id==product).all()
+    report = get_details_report(specifications, det)
+    modal = ModalComponent.query.first()
+    return render_template('product_info.html', report = report, product=db_product, modal=modal, specifications=specifications)
 
 @app.route('/delete_component/<id>')
 @login_required
@@ -150,6 +158,7 @@ def delete_product(id):
 @login_required
 def create_modal_component(modal_component, det):
     form = SpecificationForm()
+    component_name = ''
     if det == 'hollow':
         component_name = det
     else:
@@ -180,3 +189,31 @@ def component_info(component):
     db_component = Component.query.filter(Component.id==component).first()
     specifications=ModalComponent.query.filter(ModalComponent.parrent_id==component)
     return render_template('component_info.html', component=db_component, specifications=specifications)
+
+
+def get_details_report(spec,det, count=1):
+    component_name = ''
+
+    for item in spec:
+        if type(item)==Specification: 
+            item_id = item.component_id
+        else: item_id = item.child_id
+        if item.get_children(item_id):
+            count *= item.count
+            get_details_report(ModalComponent.query.filter(ModalComponent.parrent_id==item_id).all(),det, count)
+            
+        else:
+            if type(item)==Specification: 
+                component_name = Component.query.filter(Component.id==item.component_id).first().component_name
+                if component_name in det.keys():
+                    det[component_name] += item.count
+            else:
+                component_name = Component.query.filter(Component.id==item.child_id).first().component_name
+                if component_name in det.keys():
+                    det[component_name] += item.count*count
+            if component_name not in det.keys() and component_name!='':
+                det[component_name] = item.count*count
+
+        
+        
+    return det
