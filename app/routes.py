@@ -197,7 +197,6 @@ def get_details_report(spec,det, count=1):
     for item in spec:
         if type(item)==Specification: 
             item_id = item.component_id
-<<<<<<< HEAD
         else: item_id = item.child_id
         if item.get_children(item_id):
             count *= item.count
@@ -217,18 +216,4 @@ def get_details_report(spec,det, count=1):
 
         
         
-=======
-        else: item_id = item.parrent_id
-        if item.get_children(item_id):
-            count *= item.count
-            get_details_report(ModalComponent.query.filter(ModalComponent.parrent_id==item_id).all(),det, count)
-        else:
-            if type(item)==Specification: 
-                component_name = Component.query.filter(Component.id==item.component_id).first().component_name
-            else:
-                component_name = Component.query.filter(Component.id==item.child_id).first().component_name
-        if component_name not in det.keys():
-            det[component_name] = item.count*count
-
->>>>>>> bcd7b7be39bf4c1b1e94067b06b74128c0ed25fa
     return det
