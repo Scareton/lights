@@ -91,7 +91,6 @@ def product_specification(product, det):
         #     Specification.query.filter(Specification.product_id == product and Specification.component_id == det).first().count+=form.count.data
         #     db.session.commit()
         # else:
-        print(form.component_type.data)
         specification = Specification(form.component_type.data, product, det, form.count.data)
         db.session.add(specification)
         db.session.commit()
@@ -205,7 +204,6 @@ def get_details_report(spec,det, count=1):
             
         else:
             if type(item)==Specification: 
-                
                 component_name = Component.query.filter(Component.id==item.component_id).first().component_name
                 if component_name in det.keys():
                     det[component_name] += item.count
