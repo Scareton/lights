@@ -58,7 +58,10 @@ class Product(db.Model):
             Specification.query.filter(Specification.product_id==id).delete()
             specification = Specification.query.filter(Specification.product_id==id).first()
         Product.query.filter(Product.id==id).delete()
-        db.session.commit()  
+        db.session.commit()
+
+    def get_name(self):
+        return self.product_name.replace(' ', '')  
 
 
 
@@ -93,6 +96,9 @@ class Component(db.Model):
     def get_children(self, id):
         return False
     
+    def get_name(self):
+        return self.component_name.replace(' ', '')
+    
 
 class Specification(db.Model):
     __tablename__ = 'specification'
@@ -114,7 +120,7 @@ class Specification(db.Model):
     def get_product(self):
         return Product.query.filter(Product.id == self.product_id).first()
     
-    
+
     def get_children(self, id):
         return ModalComponent.get_children(self.component_id)
 

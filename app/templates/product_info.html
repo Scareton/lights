@@ -16,9 +16,6 @@
         <div class="col"><p>Материал <span>{{product.product_material}}</span></p></div>
         <div class="col"><p>Мощность: <span>{{product.product_power}}</span></p></div>
         <div class="col"><p>Вес: <span>{{product.product_weight}}</span></p></div>
-        {%for item in report%}
-            <div class="col">{{item}}:{{report[item]}}</div>
-        {%endfor%}
         <div class="col">
             <div class="p-0 col"><a href="{{url_for('product_specification', product = product.id, det = 'hollow')}}"><button type="button" class="btn btn-success btn-sm mr-3">Изменить спецификацию</button></a></div>
             <div class="p-0 col mt-2"><a href="{{url_for('delete_product', id = product.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3">Удалить</button></a></div>
