@@ -2,27 +2,27 @@
 {% block content %}
 
 
-<table class="table table-sm table-hover   ">
+<table class="table table-sm table-hover">
     <thead>
       <tr>
-        <td scope="col">Наименование</td>
-        <td scope="col">Единицы измерения</td>
-        <td scope="col">Артикул</td>
+        <td>Наименование</td>
+        <td>Единицы измерения</td>
+        <td>Артикул</td>
         <td></td>
       </tr>
     </thead>
     <tbody>
     {% for component in components%}
       <tr>
-        <td scope="row">{{component.component_name}}</td>
-        <td>{{component.component_unit}}</td>
-        <td>{{component.component_item}}</td>
-        <td>
+        <td class="py-0" >{{component.component_name}}</td>
+        <td class="py-0" >{{component.component_unit}}</td>
+        <td class="py-0">{{component.component_item}}</td>
+        <td class="py-0">
             {%if modal_component and modal_component.get_children(component.id)%}
-            <a href="{{url_for('component_info', component=component.id)}}"><button type="button" class="btn btn-success btn-sm mr-2">Составляющие</button></a>
+            <a href="{{url_for('component_info', component=component.id)}}"><button type="button" class="btn btn-success btn-sm mr-2  py-0">&#8230;</button></a>
             {%endif%}
             <!-- <a href="{{url_for('delete_component', id = component.id)}}"><button type="button" class="btn btn-sm btn-danger">Удалить</button></a> -->
-            <button type="button" class="btn btn-danger btn-sm mr-3" data-toggle="modal" data-target="{{'#'+component.get_name()}}">Удалить</button>
+            <button type="button" class="btn btn-danger btn-sm mr-3 py-0" data-toggle="modal" data-target="{{'#'+component.get_name()}}">&times;</button>
             <div class="modal fade" id='{{component.get_name()}}' tabindex="-1" role="dialog" aria-labelledby="{{component.get_name()+'Label'}}" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -41,12 +41,7 @@
         </td>
       </tr>
     {%endfor%}
-    <tr>
-        <td><div class='col-2 pl-0'><a href="{{url_for('create_component')}}"><button type="button" class="btn btn-success btn-sm mr-3">Добавить</button></a></div></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
     </tbody>
 </table>
+<div class='col-2 pl-0 mt-3'><a href="{{url_for('create_component')}}"><button type="button" class="btn btn-success btn-sm mr-3">Добавить</button></a></div>
 {% endblock %}

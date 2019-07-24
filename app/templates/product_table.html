@@ -6,20 +6,20 @@
 <table class="table table-sm table-hover">
     <thead>
       <tr>
-        <td scope="col">Наименование</td>
-        <td scope="col">Артикул</td>
-        <td></td>
+        <td  class="py-0">Наименование</td>
+        <td  class="py-0">Артикул</td>
+        <td class="py-0"></td>
       </tr>
     </thead>
     <tbody>
     {% for product in products[::-1]%}
-      <tr>
-        <td scope="row">{{product.product_name}}</td>
-        <td>{{product.product_item}}</td>
-        <td>
-            <a href="{{url_for('product_info', product = product.id)}}"><button type="button" class="btn btn-success btn-sm mr-3">Подробнее</button></a>
+    <tr>
+        <td class="py-0">{{product.product_name}}</td>
+        <td class="py-0">{{product.product_item}}</td>
+        <td class="py-0">
+            <a href="{{url_for('product_info', product = product.id)}}"><button type="button" class="btn btn-success btn-sm mr-2 py-0">&#8230;</button></a>
             
-            <button type="button" class="btn btn-danger btn-sm mr-3" data-toggle="modal" data-target="{{'#'+product.get_name()}}">Удалить</button>
+            <button type="button" class="btn btn-danger btn-sm mr-3 py-0" data-toggle="modal" data-target="{{'#'+product.get_name()}}">&times;</button>
             <div class="modal fade" id='{{product.get_name()}}' tabindex="-1" role="dialog" aria-labelledby="{{product.get_name()+'Label'}}" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -38,12 +38,8 @@
         </td>
       </tr>
     {%endfor%}
-    <tr>
-        <td><div class='col-2 pl-0'><a href="{{url_for('create_product')}}"><button type="button" class="btn btn-success btn-sm mr-3">Добавить</button></a></div></td>
-        <td></td>
-        <td></td>
-    </tr>
     </tbody>
 </table>
+<div class='col-2 pl-0 mt-3'><a href="{{url_for('create_product')}}"><button type="button" class="btn btn-success btn-sm mr-3">Добавить</button></a></div>
 </div>
 {% endblock %}

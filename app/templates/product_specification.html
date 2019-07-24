@@ -86,21 +86,21 @@
       <h4>Детали корпуса</h4>
       <thead>
       <tr>
-            <td scope="col">Деталь</td>
-            <td scope="col">Ед.изм</td>
-            <td scope="col">Кол-во</td>
-            <td></td>
+            <td class='py-0'>Деталь</td>
+            <td class='py-0'>Ед.изм</td>
+            <td class='py-0'>Кол-во</td>
+            <td class='py-0'></td>
       </tr>
       </thead>
       <tbody>
          {% for specification in specifications%}
          {% if specification.component_type == 'Детали корпуса'%}
          <tr>
-            <td scope="row">{{specification.get_component().component_name}}</td>
-            <td>{{specification.get_component().component_unit}}</td>
-            <td>{{specification.count}}</td>
-            <td>
-               <a href="{{url_for('delete_specification', id = specification.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3">&times;</button></a>
+            <td class='py-0'>{{specification.get_component().component_name}}</td>
+            <td class='py-0'>{{specification.get_component().component_unit}}</td>
+            <td class='py-0'>{{specification.count}}</td>
+            <td class='py-0'>
+               <a href="{{url_for('delete_specification', id = specification.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3  py-0">&times;</button></a>
             </td>
          </tr>
          {%endif%}
@@ -115,21 +115,21 @@
                <h4> Электротехнические детали</h4>
          <thead>
          <tr>
-            <td scope="col">Деталь</td>
-            <td scope="col">Ед.изм</td>
-            <td scope="col">Кол-во</td>
-            <td></td>
+            <td class='py-0'>Деталь</td>
+            <td class='py-0'>Ед.изм</td>
+            <td class='py-0'>Кол-во</td>
+            <td class='py-0'></td>
          </tr>
          </thead>
          <tbody>
          {% for specification in specifications%}
          {% if specification.component_type == 'Электротехнические детали'%}
          <tr>
-            <td scope="row">{{specification.get_component().component_name}}</td>
-            <td>{{specification.get_component().component_unit}}</td>
-            <td>{{specification.count}}</td>
-            <td>
-               <a href="{{url_for('delete_specification', id = specification.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3">&times;</button></a>
+            <td class='py-0'>{{specification.get_component().component_name}}</td>
+            <td class='py-0'>{{specification.get_component().component_unit}}</td>
+            <td class='py-0'>{{specification.count}}</td>
+            <td class='py-0'>
+               <a href="{{url_for('delete_specification', id = specification.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3 py-0">&times;</button></a>
             </td>
          </tr>
          {%endif%}
@@ -144,21 +144,21 @@
                <h4>Герметики</h4>
          <thead>
          <tr>
-            <td scope="col">Деталь</td>
-            <td scope="col">Ед.изм</td>
-            <td scope="col">Кол-во</td>
-            <td></td>
+            <td class='py-0'>Деталь</td>
+            <td class='py-0'>Ед.изм</td>
+            <td class='py-0'>Кол-во</td>
+            <td class='py-0'></td>
          </tr>
          </thead>
          <tbody>
          {% for specification in specifications%}
          {% if specification.component_type == 'Герметики'%}
          <tr>
-            <td scope="row">{{specification.get_component().component_name}}</td>
-            <td>{{specification.get_component().component_unit}}</td>
-            <td>{{specification.count}}</td>
-            <td>
-               <a href="{{url_for('delete_specification', id = specification.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3">&times;</button></a>
+            <td class='py-0'>{{specification.get_component().component_name}}</td>
+            <td class='py-0'>{{specification.get_component().component_unit}}</td>
+            <td class='py-0'>{{specification.count}}</td>
+            <td class='py-0'>
+               <a href="{{url_for('delete_specification', id = specification.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3 py-0">&times;</button></a>
             </td>
          </tr>
          {%endif%}
@@ -174,21 +174,21 @@
                <h4>Метизы</h4>
          <thead>
          <tr>
-            <td scope="col">Деталь</td>
-            <td scope="col">Ед.изм</td>
-            <td scope="col">Кол-во</td>
-            <td></td>
+            <td class='py-0'>Деталь</td>
+            <td class='py-0'>Ед.изм</td>
+            <td class='py-0'>Кол-во</td>
+            <td class='py-0'></td>
          </tr>
          </thead>
          <tbody>
          {% for specification in specifications%}
          {% if specification.component_type == 'Метизы'%}
          <tr>
-            <td scope="row">{{specification.get_component().component_name}}</td>
-            <td>{{specification.get_component().component_unit}}</td>
-            <td>{{specification.count}}</td>
-            <td>
-               <a href="{{url_for('delete_specification', id = specification.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3">&times;</button></a>
+            <td class='py-0'>{{specification.get_component().component_name}}</td>
+            <td class='py-0'>{{specification.get_component().component_unit}}</td>
+            <td class='py-0'>{{specification.count}}</td>
+            <td class='py-0'>
+               <a href="{{url_for('delete_specification', id = specification.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3 py-0">&times;</button></a>
             </td>
          </tr>
          {%endif%}
@@ -204,21 +204,21 @@
                <h4> Упаковка</h4>
          <thead>
          <tr>
-            <td scope="col">Деталь</td>
-            <td scope="col">Ед.изм</td>
-            <td scope="col">Кол-во</td>
-            <td></td>
+            <td class='py-0'>Деталь</td>
+            <td class='py-0'>Ед.изм</td>
+            <td  class='py-0'>Кол-во</td>
+            <td class='py-0'></td>
          </tr>
          </thead>
          <tbody>
          {% for specification in specifications%}
          {% if specification.component_type == 'Упаковка'%}
          <tr>
-            <td scope="row">{{specification.get_component().component_name}}</td>
-            <td>{{specification.get_component().component_unit}}</td>
-            <td>{{specification.count}}</td>
-            <td>
-               <a href="{{url_for('delete_specification', id = specification.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3">&times;</button></a>
+            <td  class='py-0'>{{specification.get_component().component_name}}</td>
+            <td class='py-0'>{{specification.get_component().component_unit}}</td>
+            <td class='py-0'>{{specification.count}}</td>
+            <td class='py-0'>
+               <a href="{{url_for('delete_specification', id = specification.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3 py-0">&times;</button></a>
             </td>
          </tr>
          {%endif%}
@@ -244,11 +244,11 @@
          {% for specification in specifications%}
          {% if specification.component_type == 'Расходные материалы'%}
          <tr>
-            <td scope="row">{{specification.get_component().component_name}}</td>
-            <td>{{specification.get_component().component_unit}}</td>
-            <td>{{specification.count}}</td>
-            <td>
-               <a href="{{url_for('delete_specification', id = specification.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3">&times;</button></a>
+            <td class='py-0'>{{specification.get_component().component_name}}</td>
+            <td class='py-0'>{{specification.get_component().component_unit}}</td>
+            <td class='py-0'>{{specification.count}}</td>
+            <td class='py-0'>
+               <a href="{{url_for('delete_specification', id = specification.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3 py-0">&times;</button></a>
             </td>
          </tr>
          {%endif%}
