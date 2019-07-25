@@ -143,7 +143,17 @@ class ModalComponent(db.Model):
             for parrent in ModalComponent.query.filter(ModalComponent.parrent_id==id).all():
                 children.append(Component.query.filter(Component.id == parrent.child_id).first())
             return children
-        return False
+        return children
+
+    @staticmethod
+    def get_parents(id):
+        parents = []
+        if ModalComponent.query.filter(ModalComponent.child_id==id).first():
+            for child in ModalComponent.query.filter(ModalComponent.child_id==id).all():
+                parents.append(Component.query.filter(Component.id == child.parrent_id).first())
+            return parents
+        return parents
+
     def get_component(self):
         return Component.query.filter(Component.id == self.child_id).first()
 

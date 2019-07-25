@@ -163,17 +163,20 @@ def create_modal_component(modal_component, det):
         component_name = det
     else:
         component_name = Component.query.filter(Component.id==det).first().component_name
-    modals = db.session.query(ModalComponent.parrent_id).filter(ModalComponent.child_id==modal_component).all()
+    modals = [x.id for x in ModalComponent.get_children(modal_component)]
+    print(modals)
     components = Component.query.filter(Component.id!=modal_component).order_by(Component.component_name).all()
+    parents = ModalComponent.get_parents(modal_component)
+    print(components)
     if request.method == 'POST':
         if form.count.data is None:
             flash('Используйте "." вместо ","')
-            return redirect(url_for('create_modal_component',modals=modals,  modal_component=modal_component,component_name=component_name, components=components, specifications=ModalComponent.query.filter(ModalComponent.parrent_id==modal_component) ))
+            return redirect(url_for('create_modal_component', parents=parents, modals=modals,  modal_component=modal_component,component_name=component_name, components=components, specifications=ModalComponent.query.filter(ModalComponent.parrent_id==modal_component) ))
         specification = ModalComponent( modal_component, det, form.count.data)
         db.session.add(specification)
         db.session.commit()
-        return redirect(url_for('create_modal_component',modals=modals, modal_component=modal_component, det='hollow', component_name=component_name,components=components, specifications=ModalComponent.query.filter(ModalComponent.parrent_id==modal_component)))
-    return render_template('create_modal_component.html',modals=modals, modal_component=modal_component,det='hollow',component_name=component_name, form=form, components=components, specifications=ModalComponent.query.filter(ModalComponent.parrent_id==modal_component))
+        return redirect(url_for('create_modal_component', parents=parents, modals=modals, modal_component=modal_component, det='hollow', component_name=component_name,components=components, specifications=ModalComponent.query.filter(ModalComponent.parrent_id==modal_component)))
+    return render_template('create_modal_component.html', parents=parents, modals=modals, modal_component=modal_component,det='hollow',component_name=component_name, form=form, components=components, specifications=ModalComponent.query.filter(ModalComponent.parrent_id==modal_component))
 
 @app.route('/delete_modal_component/<id>')
 @login_required

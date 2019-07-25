@@ -51,13 +51,16 @@
                           <table class="table table-sm table-hover mt-4" id='mytable'>
                               <tbody>
                               {% for component in components%}
+                                 {%if component.id not in modals and component not in parents%}
+                                 
                                 <tr>
                                   <td class='py-0'>{{component.component_name}}</td>
                                   <td class='py-0'>{{component.component_item}}</td>
                                   <td class='py-0'>
-                                      <a href="{{url_for('create_modal_component', modal_component = modal_component, det=component.id)}}"><button type="button" class="btn btn-success btn-sm mr-3">Выбрать</button></a>
+                                      <a href="{{url_for('create_modal_component', modal_component = modal_component, det=component.id)}}"><button type="button" class="btn btn-success btn-sm mr-3 py-0">+</button></a>
                                   </td>
                                 </tr>
+                                {%endif%}
                               {%endfor%}
                               </tbody>
                           </table>
@@ -65,8 +68,10 @@
                </div>
             </div>
          </div>
-         {{ form.count(class_=" form-control col-2 mr-3", placeholder="Количество") }}
-         {{ form.submit(class_="btn btn-success btn-sm ") }}
+         {%if component_name != 'hollow'%}
+            {{ form.count(class_=" form-control col-3 mr-3", placeholder="Кол-во") }}
+            {{ form.submit(class_="btn btn-success btn-sm ") }}
+         {%endif%}
       </div>
        
     </fieldset>
@@ -93,10 +98,10 @@
             <td class='py-0'>{{specification.get_component().component_unit}}</td>
             <td class='py-0'>{{specification.count}}</td>
             <td class='py-0'>
-                {%for model in modals%}
+                <!-- {%for model in modals%}
                 <a href="{{url_for('component_info', component=specification.get_component().id)}}"><button type="button" class="btn btn-success btn-sm mr-3">Составляющие</button></a>
-                {%endfor%}
-               <a href="{{url_for('delete_modal_component', id = specification.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3">&times;</button></a>
+                {%endfor%} -->
+               <a href="{{url_for('delete_modal_component', id = specification.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3 py-0">&times;</button></a>
             </td>
          </tr>
          {%endfor%}
