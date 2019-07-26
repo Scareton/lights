@@ -157,4 +157,28 @@ class ModalComponent(db.Model):
     def get_component(self):
         return Component.query.filter(Component.id == self.child_id).first()
 
+class Document(db.Model):
+    __tablename__ = 'document'
+    id = db.Column(db.Integer(), primary_key=True)
+    date = db.Column(db.Date)
+    maker_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
+    document_type = db.Column(db.String())
+    comment = db.Column(db.String())
 
+    def __init__(self, date, maker_id, document_type, comment):
+        self.date = date
+        self.maker_id = maker_id
+        self.document_type = document_type
+        self.comment = comment
+
+class Stock(db.Model):
+    __tablename__ = 'stock'
+    id = db.Column(db.Integer(), primary_key=True)
+    document_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
+    component_id = db.Column(db.Integer(), db.ForeignKey('component.id', ondelete='CASCADE'))
+    count =  db.Column(db.Float())
+
+    def __init__(self, document_id, component_id, count):
+        self.document_id = document_id
+        self.component_id = component_id
+        self.count = count
