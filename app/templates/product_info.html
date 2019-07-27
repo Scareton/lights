@@ -16,17 +16,20 @@
         <div class="col"><p>Материал <span>{{product.product_material}}</span></p></div>
         <div class="col"><p>Мощность: <span>{{product.product_power}}</span></p></div>
         <div class="col"><p>Вес: <span>{{product.product_weight}}</span></p></div>
-        <div class="col">
+        <div class="col p-0 pr-2">
+            
             <div class="p-0 col"><a href="{{url_for('product_specification', product = product.id, det = 'hollow')}}"><button type="button" class="btn btn-success btn-sm mr-3">Изменить спецификацию</button></a></div>
-            <div class="p-0 col mt-2"><a href="{{url_for('delete_product', id = product.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3">Удалить</button></a></div>
-               
+            <div class="row p-0 pr-4">
+               <div class="p-0 col-2 ml-3 mr-2 mt-2"><a href="{{url_for('create_product', cloned_product = product.id)}}"><button type="button" class="btn btn-info btn-sm mr-3">Клонировать</button></a></div>
+               <div class="p-0 pr-2 col-1 ml-5 mt-2"><a href="{{url_for('delete_product', id = product.id)}}"><button type="button" class="btn btn-danger btn-sm mr-3">Удалить</button></a></div>
+            </div>
          </div>
     </div>
 <div class=" m-0 col-8">
     <div class=" m-0 col">
       
        <table class="table table-sm table-hover  ">
-          <h5>Детали корпуса</h5>
+          <h6>Детали корпуса</h6>
           <thead>
           <tr>
                <td scope="col">Деталь</td>
@@ -51,7 +54,7 @@
     </div>
     <div class=" m-0 col">
           <table class="table table-sm table-hover  ">
-                   <h4> Электротехнические детали</h4>
+                   <h6> Электротехнические детали</h6>
              <thead>
              <tr>
                <td scope="col">Деталь</td>
@@ -76,7 +79,7 @@
     </div>
     <div class=" m-0 col">
           <table class="table table-sm table-hover  ">
-                   <h4>Герметики</h4>
+                   <h6>Герметики</h6>
              <thead>
              <tr>
                <td scope="col">Деталь</td>
@@ -102,7 +105,7 @@
     
     <div class=" m-0 col">
           <table class="table table-sm table-hover  ">
-                   <h4>Метизы</h4>
+                   <h6>Метизы</h6>
              <thead>
              <tr>
                <td scope="col">Деталь</td>
@@ -128,7 +131,7 @@
     
     <div class=" m-0 col">
           <table class="table table-sm table-hover  ">
-                   <h4> Упаковка</h4>
+                   <h6> Упаковка</h6>
              <thead>
              <tr>
                <td scope="col">Деталь</td>
@@ -154,7 +157,7 @@
     
     <div class=" m-0 col">
           <table class="table table-sm table-hover  ">
-                   <h4> Расходные материалы</h4>
+                   <h6> Расходные материалы</h6>
              <thead>
              <tr>
                <td scope="col">Деталь</td>

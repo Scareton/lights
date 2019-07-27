@@ -55,8 +55,9 @@ def product_table():
     return render_template('product_table.html', products=products)
 
 @app.route('/create_product', methods = ['GET', 'POST'])
+@app.route('/clone_product/<cloned_product>', methods = ['GET', 'POST'])
 @login_required
-def create_product():
+def create_product(cloned_product=False):
     form = ProductForm()
     if request.method == 'POST':
         if form.validate() == False:
@@ -69,6 +70,12 @@ def create_product():
             else:
                 product = Product(form.name.data, form.power.data, form.item.data, form.weight.data, form.materials.data)
                 db.session.add(product)
+                if product:
+                    cloned_product = Product.query.filter(Product.id==cloned_product).first()
+                    specifications = Specification.query.filter(Specification.product_id==cloned_product.id).all()
+                    for specification in specifications:
+                        cloned_specification = Specification(specification.component_type, product.id, specification.component_id, specification.count)
+                        db.session.add(cloned_specification)
                 db.session.commit()
                 return redirect(url_for('product_specification', product = product.id, det = 'hollow'))
     return render_template('create_product.html', form=form)
@@ -101,7 +108,7 @@ def product_specification(product, det):
 @login_required
 def component_table():
     modal_component = ModalComponent.query.first()
-    components = Component.query.all()[::-1]
+    components = Component.query.order_by(Component.component_name).all()
     return render_template('component_table.html', components=components, modal_component=modal_component)
 
 @app.route('/create_component', methods = ['GET', 'POST'])

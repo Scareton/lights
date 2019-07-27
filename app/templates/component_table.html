@@ -1,9 +1,12 @@
 {%extends "base.html" %}
 {% block content %}
-
-<div class='col-2 pl-0 my-3'><a href="{{url_for('create_component')}}"><button type="button" class="btn btn-success btn-sm mr-3">Добавить</button></a></div>
-
-<table class="table table-sm table-hover">
+<div class="row">
+  <div class='col-2 px-0 ml-3 my-3'><a href="{{url_for('create_component')}}"><button type="button" class="btn btn-success">Добавить</button></a></div>
+  <div class="p-0 form-group mt-3">
+      <input type="text" class="form-control" id="search" placeholder="Поиск по таблице">
+  </div>
+</div>
+<table id=mytable class="table table-sm table-hover">
     <thead>
       <tr>
         <td>Наименование</td>
