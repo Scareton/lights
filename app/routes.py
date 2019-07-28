@@ -51,7 +51,7 @@ def append_role(user, role):
 @app.route('/product_table')
 @login_required
 def product_table():
-    products = Product.query.all()
+    products = Product.query.order_by(Product.product_name).all()
     return render_template('product_table.html', products=products)
 
 @app.route('/create_product', methods = ['GET', 'POST'])
@@ -70,7 +70,7 @@ def create_product(cloned_product=False):
             else:
                 product = Product(form.name.data, form.power.data, form.item.data, form.weight.data, form.materials.data)
                 db.session.add(product)
-                if product:
+                if cloned_product:
                     cloned_product = Product.query.filter(Product.id==cloned_product).first()
                     specifications = Specification.query.filter(Specification.product_id==cloned_product.id).all()
                     for specification in specifications:
