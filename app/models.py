@@ -61,7 +61,11 @@ class Product(db.Model):
         db.session.commit()
 
     def get_name(self):
-        return self.product_name.replace(' ', '')  
+        liters = [' ', '"']
+        name = self.product_name
+        for liter in liters:
+            name = name.replace(liter, '')
+        return name
 
 
 
