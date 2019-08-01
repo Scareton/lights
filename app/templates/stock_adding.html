@@ -38,7 +38,7 @@
                       <div class="modal-body">
                         <div class="row px-3 py-2">
                             <div class="col mt-2"> Количество комплектующих:</div>
-                        <div class="col"> {{form.count(class_="mr-2 mb-2 form-control", placeholder="Кол-во")}}</div>
+                        <div class="col"> {{form.count( class_="mr-2 mb-2 form-control", placeholder="Кол-во")}}</div>
                         </div>
                         
                         <div class="col pl-3 py-0 mt-1 mb-1">
@@ -47,11 +47,12 @@
                         <div class="col py-0">
                             {{form.text()}}
                         </div>
-                        {{form.id(default=component.id, data=component.id)}}
+                        {{form.id(value=component.id, type="hidden")}}
+                        
                       </div>
                       
                       <div class="modal-footer">
-                        {{form.submit(class_="btn btn-success")}}
+                        {{form.submit( class_="btn btn-success")}}
                       </div>
                     </form>
                     </div>

@@ -212,10 +212,7 @@ def stock_adding():
     form = SpecificationForm()
     modal_component = ModalComponent.query.first()
     last_stocked = Stock.query.first()
-    print(last_stocked.document_id)
-    print(modal_component)
     components = Component.query.order_by(Component.component_name).all()
-    print(form.id.data)
     if request.method == 'POST':
         if form.count.data is None:
             flash('Используйте "." вместо ","')
