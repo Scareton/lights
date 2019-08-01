@@ -40,7 +40,7 @@
                 <td>{{specification.count}}</td>
                 <td>
                     {%if specification.get_children(specification.get_component().id)%}
-                        <a href="{{url_for('component_info', component=specification.get_component().id)}}"><button type="button" class="btn btn-success btn-sm mr-2">Составляющие</button></a>
+                        <a href="{{url_for('component_info', component=specification.get_component().id)}}"><button type="button" class="py-0 btn btn-success btn-sm mr-2">...</button></a>
                     {%endif%}</td>
              </tr>
              {%endfor%}

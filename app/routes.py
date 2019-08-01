@@ -5,13 +5,19 @@ from flask import render_template, flash, redirect, url_for, request, send_from_
 from flask_user import current_user, login_required, roles_required, UserManager, UserMixin
 from werkzeug.utils import secure_filename
 from werkzeug.urls import url_parse
-from app.models import User, UserRoles, Role, Product, Component, Specification, ModalComponent
+from app.models import User, UserRoles, Role, Product, Component, Specification, ModalComponent, Document, Stock
 from app.forms import ProductForm, ComponentForm, SpecificationForm
+from datetime import datetime, date, time
 
 
 @app.route('/')
 @login_required
 def home_page():
+    if Document.query.first() is None:
+        db.session.add(Document(datetime.utcnow(), current_user.id,'Приход', 'Пришло'))
+        db.session.add(Stock(Document.query.first().id,Component.query.first().id, 28))
+    view = db.session.query(Document.document_type, Stock.count, Stock.component_id, Stock.document_id).all()
+    print(view)
     return render_template('index.html')
 
 @app.route('/search')
@@ -199,6 +205,30 @@ def component_info(component):
     db_component = Component.query.filter(Component.id==component).first()
     specifications=ModalComponent.query.filter(ModalComponent.parrent_id==component)
     return render_template('component_info.html', component=db_component, specifications=specifications)
+
+@app.route('/stock_adding', methods = ['GET', 'POST'])
+@login_required
+def stock_adding():
+    form = SpecificationForm()
+    modal_component = ModalComponent.query.first()
+    last_stocked = Stock.query.first()
+    print(last_stocked.document_id)
+    print(modal_component)
+    components = Component.query.order_by(Component.component_name).all()
+    print(form.id.data)
+    if request.method == 'POST':
+        if form.count.data is None:
+            flash('Используйте "." вместо ","')
+            return redirect(url_for('stock_adding', last_stocked = last_stocked, form = form, component = components, modal_component=modal_component ))
+        document = Document(datetime.utcnow(), current_user.id, 'Приход', form.text.data)
+        print(document.id)
+        db.session.add(document)
+        db.session.commit()
+        stock = Stock(document.id, form.id.data, form.count.data)
+        db.session.add(stock)
+        db.session.commit()
+        return redirect(url_for('stock_adding', form = form, last_stocked = last_stocked,  component = components, modal_component=modal_component))
+    return render_template('stock_adding.html', form = form, last_stocked = last_stocked,  components = components, modal_component=modal_component)
 
 
 def get_details_report(spec,det, count=1):

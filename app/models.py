@@ -1,5 +1,8 @@
 from app import db
 from flask_user import current_user, login_required, roles_required, UserManager, UserMixin
+from sqlalchemy import Table, MetaData
+from sqlalchemy.sql import text
+from sqlalchemy_views import CreateView, DropView
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -61,11 +64,7 @@ class Product(db.Model):
         db.session.commit()
 
     def get_name(self):
-        liters = [' ', '"']
-        name = self.product_name
-        for liter in liters:
-            name = name.replace(liter, '')
-        return name
+        return self.product_name.replace(' ', '')  
 
 
 
@@ -100,8 +99,14 @@ class Component(db.Model):
     def get_children(self, id):
         return False
     
+
+    
     def get_name(self):
-        return self.component_name.replace(' ', '')
+        liters = [' ', '"']
+        name = self.component_name
+        for liter in liters:
+            name = name.replace(liter, '')
+        return name
     
 
 class Specification(db.Model):
@@ -186,3 +191,11 @@ class Stock(db.Model):
         self.document_id = document_id
         self.component_id = component_id
         self.count = count
+
+    # def get_info(self):
+    #     name = Component.query.filter(Component.id==self.component_id).first().component_name
+    #     docmaker,docdate,doctype = Document.query.filter(Document.id==self.document_id).first().maker_id,Document.query.filter(Document.id==self.document_id).first().date,Document.query.filter(Document.id==self.document_id).first().document_type
+    #     return [name, docmaker, docdate, doctype]
+
+
+

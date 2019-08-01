@@ -1,0 +1,73 @@
+{%extends "base.html" %}
+{% block content %}
+<div class="row">
+  <div class="p-0 form-group ml-3 mt-4 mb-2">
+      <input type="text" class="form-control" id="search" placeholder="Поиск по таблице">
+  </div>
+</div>
+<div class="row">
+<div class="col">
+<table  id=mytable class="table table-sm table-hover">
+    <thead>
+      <tr>
+        <td>Наименование</td>
+        <td>Единицы измерения</td>
+        <td>Артикул</td>
+        <td></td>
+      </tr>
+    </thead>
+    <tbody style="overflow: auto; height:400px;">
+    {% for component in components%}
+     {% if modal_component.get_children(component.id)==[]%}
+      <tr>
+        <td class="py-0" >{{component.component_name}}</td>
+        <td class="py-0" >{{component.component_unit}}</td>
+        <td class="py-0">{{component.component_item}}</td>
+        <td class="py-0">
+                <button type="button" class="btn btn-danger btn-sm mr-3 py-0" data-toggle="modal" data-target="{{'#'+component.get_name()}}">+</button>
+                <div class="modal fade" id='{{component.get_name()}}' tabindex="-1" role="dialog" aria-labelledby="{{component.get_name()+'Label'}}" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header text-center">
+                        <h5 class="modal-title">Добавление на склад</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <form class='form' action = "" method = post>
+                      <div class="modal-body">
+                        <div class="row px-3 py-2">
+                            <div class="col mt-2"> Количество комплектующих:</div>
+                        <div class="col"> {{form.count(class_="mr-2 mb-2 form-control", placeholder="Кол-во")}}</div>
+                        </div>
+                        
+                        <div class="col pl-3 py-0 mt-1 mb-1">
+                            Комментарий:
+                        </div>
+                        <div class="col py-0">
+                            {{form.text()}}
+                        </div>
+                        {{form.id(default=component.id, data=component.id)}}
+                      </div>
+                      
+                      <div class="modal-footer">
+                        {{form.submit(class_="btn btn-success")}}
+                      </div>
+                    </form>
+                    </div>
+                  </div>
+                </div>
+        </td>
+      </tr>
+     {% endif%}
+    {%endfor%}
+    </tbody>
+</table>
+</div>
+
+<div class="col">
+        
+</div>
+
+</div>
+{% endblock %}
