@@ -14,11 +14,7 @@ from datetime import datetime, date, time
 @app.route('/')
 @login_required
 def home_page():
-    if Document.query.first() is None:
-        db.session.add(Document(datetime.utcnow(), current_user.id,'Приход', 'Пришло'))
-        db.session.add(Stock(Document.query.first().id,Component.query.first().id, 28))
-    view = db.session.query(Document.document_type, Stock.count, Stock.component_id, Stock.document_id).all()
-    print(view)
+    
     return render_template('index.html')
 
 @app.route('/users_table')
