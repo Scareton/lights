@@ -2,7 +2,8 @@
 {% block content %}
 
 <div class="row">
-    <div class="p-0 form-group ml-3 mt-4 mb-2">
+    <div class="col"><button class="mt-4 btn btn-primary mr-2">Новая деталь</button></div>
+    <div class="p-0 form-group ml-2 mt-4 mb-2">
         <input type="text" class="form-control" id="search" placeholder="Поиск по таблице">
     </div>
   </div>
@@ -15,19 +16,69 @@
           <td>Единицы измерения</td>
           <td>Артикул</td>
           <td>Кол-во</td>
+          <td></td>
         </tr>
       </thead>
       <tbody style="overflow: auto; height:400px;">
       {% for item in stock%}
+      {%if item.get_count()!=0%}
         <tr>
           <td class="py-0" >{{item.get_component().component_name}}</td>
           <td class="py-0" >{{item.get_component().component_unit}}</td>
           <td class="py-0">{{item.get_component().component_item}}</td>
           <td class="py-0">{{item.get_count()}}</td>
+          <td>
+            <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">      
+                <button type="button" class="btn btn-success btn-sm py-0">...</button>
+                <button type="button" class="btn btn-info btn-sm py-0" data-toggle="modal" data-target="{{'#'+item.get_component().component_name}}"> <img src="static/images/document-16.png" alt="" style="vertical-align:middle"> </button>
+            </div>
+            <button type="button" class="btn btn-danger btn-sm offset-2 py-0">&times;</button>
+          </td>
         </tr>
+        <div class="modal fade" id='{{item.get_component().component_name}}' tabindex="-1" role="dialog" aria-labelledby="{{item.get_component().component_name+'Label'}}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header text-center">
+                      <h5 class="modal-title">Добавление на склад</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form class='form' action = "" method = post>
+                    <div class="modal-body">
+                    <div class="row px-3 py-2">
+                        <div class="col mt-2">
+                                {{form.document_type(class_="form-control selectpicker mr-3 col-4")}}
+                        </div>
+                    </div>
+                      <div class="row px-3 py-2">
+                          
+                          <div class="col mt-2"> Количество комплектующих:</div>
+                      <div class="col"> {{form.count( class_="mr-2 mb-2 form-control", placeholder="Кол-во")}}</div>
+                      </div>
+                      
+                      <div class="col pl-3 py-0 mt-1 mb-1">
+                          Комментарий:
+                      </div>
+                      <div class="col py-0">
+                          {{form.text()}}
+                      </div>
+                      {{form.id(value=item.get_component().id, type="hidden")}}
+                      
+                    </div>
+                    
+                    <div class="modal-footer">
+                      {{form.submit( class_="btn btn-success")}}
+                    </div>
+                  </form>
+                  </div>
+                </div>
+              </div>
+        {%endif%}
       {%endfor%}
       </tbody>
   </table>
   </div>
 
+  
 {% endblock %}

@@ -197,16 +197,31 @@ def component_info(component):
     specifications=ModalComponent.query.filter(ModalComponent.parrent_id==component)
     return render_template('component_info.html', component=db_component, specifications=specifications)
 
-@app.route('/stock')
+@app.route('/stock', methods = ['GET', 'POST'])
 @login_required
 def stock():
     stock_db = list(set(db.session.query(Stock.component_id).all()))
-    print(stock_db[0][0])
     stock = []
     for item in stock_db:
         stock.append(Stock.query.filter(Stock.component_id==item[0]).first())
-    print(stock)
-    return render_template('stock.html', stock=stock)
+    form = SpecificationForm()
+    if request.method == 'POST':
+        if form.count.data is None:
+            flash('Используйте "." вместо ","')
+            return redirect(url_for('stock', form=form, stock=stock))
+        document = Document(datetime.utcnow(), current_user.id, form.document_type.data, form.text.data)
+        db.session.add(document)
+        db.session.commit()
+        stock = Stock(document.id, form.id.data, form.count.data)
+        db.session.add(stock)
+        db.session.commit()
+        if form.document_type.data=='Приход':
+            flash('Приход {} на склад'.format(stock.get_name()), 'message')
+        else:
+            flash('Расход детали {} со склада'.format(stock.get_name()), 'message')
+        return redirect(url_for('stock', form=form, stock=stock))
+    
+    return render_template('stock.html', form=form, stock=stock)
 
 @app.route('/stock_adding', methods = ['GET', 'POST'])
 @login_required

@@ -31,7 +31,7 @@ class SpecificationForm(Form):
 
     component_type = SelectField('Тип компонента', choices = [('Детали корпуса','Детали корпуса'),  ('Электротехнические детали','Электротехнические детали'),
     ('Герметики', 'Герметики'), ('Метизы', 'Метизы'), ('Упаковка', 'Упаковка'), ('Расходные материалы', 'Расходные материалы')])
-    
+    document_type = SelectField('Тип документа', choices = [('Приход', 'Приход'),('Расход', 'Расход')])
     detail = TextField(det,[validators.Required("Введите наименование детали")])
     count = FloatField('Количество', [validators.Required("Введите количество деталей")])
     submit = SubmitField("Добавить")
