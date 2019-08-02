@@ -1,9 +1,21 @@
 {%extends "base.html" %}
 {% block content %}
+{% block flash_messages %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            {%if 'success' not in message and 'must' not in message%}
+            <div id=message class="alert alert-success">{{ message|safe }}</div>
+            {%endif%}
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+{% endblock %}
 <div class="row">
   <div class="p-0 form-group ml-3 mt-4 mb-2">
       <input type="text" class="form-control" id="search" placeholder="Поиск по таблице">
   </div>
+  <div class="col-3 offset-4 mt-5 mr-2 p-0">Добавленные</div>
 </div>
 <div class="row">
 <div class="col">
@@ -66,9 +78,37 @@
 </table>
 </div>
 
-<div class="col">
-        
-</div>
+<!-- <div class="col">        
+        <table  id=mytable class="table table-sm table-hover table-bordered">
+          <thead>
+            <tr>
+              <td>Наименование</td>
+              <td>Количество</td>
+              <td colspan="2">Единицы измерения</td>
+            </tr>
+          </thead>
+          <tbody style="overflow: auto; height:400px;">
+          {% for item in added%}
+            <tr>
+              <td class="py-0" >{{item.get_name()}}</td>
+              <td class="py-0" >{{item.count}}</td>
+              <td class="py-0">{{item.get_unit()}}</td>
+              <td class="py-0">
+                      
+                      
+              </td>
+            </tr>
+          {%endfor%}
+          </tbody>
+      </table>
+</div> -->
 
 </div>
+<script>
+$('#message').show(200, function(){
+  setTimeout(function(){
+    $('#message').hide(500);
+  }, 2000);
+});
+</script>
 {% endblock %}

@@ -10,6 +10,7 @@ from app.forms import ProductForm, ComponentForm, SpecificationForm
 from datetime import datetime, date, time
 
 
+
 @app.route('/')
 @login_required
 def home_page():
@@ -19,12 +20,6 @@ def home_page():
     view = db.session.query(Document.document_type, Stock.count, Stock.component_id, Stock.document_id).all()
     print(view)
     return render_template('index.html')
-
-@app.route('/search')
-@login_required
-def search():
-    components = Component.query.all()
-    return render_template('search_component.html', components=components)
 
 @app.route('/users_table')
 @roles_required('Admin')
@@ -206,6 +201,17 @@ def component_info(component):
     specifications=ModalComponent.query.filter(ModalComponent.parrent_id==component)
     return render_template('component_info.html', component=db_component, specifications=specifications)
 
+@app.route('/stock')
+@login_required
+def stock():
+    stock_db = list(set(db.session.query(Stock.component_id).all()))
+    print(stock_db[0][0])
+    stock = []
+    for item in stock_db:
+        stock.append(Stock.query.filter(Stock.component_id==item[0]).first())
+    print(stock)
+    return render_template('stock.html', stock=stock)
+
 @app.route('/stock_adding', methods = ['GET', 'POST'])
 @login_required
 def stock_adding():
@@ -218,12 +224,12 @@ def stock_adding():
             flash('Используйте "." вместо ","')
             return redirect(url_for('stock_adding', last_stocked = last_stocked, form = form, component = components, modal_component=modal_component ))
         document = Document(datetime.utcnow(), current_user.id, 'Приход', form.text.data)
-        print(document.id)
         db.session.add(document)
         db.session.commit()
         stock = Stock(document.id, form.id.data, form.count.data)
         db.session.add(stock)
         db.session.commit()
+        flash('Деталь {} добавлена на склад'.format(stock.get_name()), 'message')
         return redirect(url_for('stock_adding', form = form, last_stocked = last_stocked,  component = components, modal_component=modal_component))
     return render_template('stock_adding.html', form = form, last_stocked = last_stocked,  components = components, modal_component=modal_component)
 

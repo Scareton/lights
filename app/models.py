@@ -2,7 +2,6 @@ from app import db
 from flask_user import current_user, login_required, roles_required, UserManager, UserMixin
 from sqlalchemy import Table, MetaData
 from sqlalchemy.sql import text
-from sqlalchemy_views import CreateView, DropView
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -16,7 +15,7 @@ class User(db.Model, UserMixin):
 
     # Define the relationship to Role via UserRoles
     roles = db.relationship('Role', secondary='user_roles')
-
+    
     # Define the Role data-model
     def delete_role(self, del_role):
         for role in self.roles:
@@ -64,7 +63,11 @@ class Product(db.Model):
         db.session.commit()
 
     def get_name(self):
-        return self.product_name.replace(' ', '')  
+        liters = [' ', '"']
+        name = self.product_name
+        for liter in liters:
+            name = name.replace(liter, '')
+        return name
 
 
 
@@ -116,7 +119,7 @@ class Specification(db.Model):
     product_id = db.Column(db.Integer(), db.ForeignKey('product.id', ondelete='CASCADE'))
     component_id = db.Column(db.Integer(), db.ForeignKey('component.id', ondelete='CASCADE'))
     count =  db.Column(db.Float())
-
+    residue = db.Column(db.Float())
     def __init__(self, component_type, product_id, component_id, count):
         self.component_type = component_type
         self.product_id = product_id
@@ -192,10 +195,29 @@ class Stock(db.Model):
         self.component_id = component_id
         self.count = count
 
-    # def get_info(self):
-    #     name = Component.query.filter(Component.id==self.component_id).first().component_name
-    #     docmaker,docdate,doctype = Document.query.filter(Document.id==self.document_id).first().maker_id,Document.query.filter(Document.id==self.document_id).first().date,Document.query.filter(Document.id==self.document_id).first().document_type
-    #     return [name, docmaker, docdate, doctype]
+    def get_name(self):
+        name = Component.query.filter(Component.id==self.component_id).first().component_name
+        return name
+    def get_unit(self):
+        unit = Component.query.filter(Component.id==self.component_id).first().component_unit
+        return unit
+
+    def get_count(self):
+        count=0
+        for item in Stock.query.filter(Stock.component_id==self.component_id).all():
+            if item.get_document().document_type=='Приход':
+                count+=item.count
+            elif item.get_document().document_type=='Расход':
+                count-=item.count
+            else:
+                return 0
+        return count
+
+    def get_component(self):
+        return Component.query.filter(Component.id==self.component_id).first()
+    
+    def get_document(self):
+        return Document.query.filter(Document.id==self.document_id).first()
 
 
 

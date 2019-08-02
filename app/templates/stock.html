@@ -1,0 +1,33 @@
+{%extends "base.html" %}
+{% block content %}
+
+<div class="row">
+    <div class="p-0 form-group ml-3 mt-4 mb-2">
+        <input type="text" class="form-control" id="search" placeholder="Поиск по таблице">
+    </div>
+  </div>
+  <div class="row">
+  <div class="col">
+  <table  id=mytable class="table table-sm table-hover">
+      <thead>
+        <tr>
+          <td>Наименование</td>
+          <td>Единицы измерения</td>
+          <td>Артикул</td>
+          <td>Кол-во</td>
+        </tr>
+      </thead>
+      <tbody style="overflow: auto; height:400px;">
+      {% for item in stock%}
+        <tr>
+          <td class="py-0" >{{item.get_component().component_name}}</td>
+          <td class="py-0" >{{item.get_component().component_unit}}</td>
+          <td class="py-0">{{item.get_component().component_item}}</td>
+          <td class="py-0">{{item.get_count()}}</td>
+        </tr>
+      {%endfor%}
+      </tbody>
+  </table>
+  </div>
+
+{% endblock %}
