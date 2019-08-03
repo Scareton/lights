@@ -210,7 +210,7 @@ class Stock(db.Model):
             elif item.get_document().document_type=='Расход':
                 count-=item.count
             else:
-                return 0
+                count=0
         return count
 
     def get_component(self):

@@ -1,5 +1,16 @@
 {%extends "base.html" %}
 {% block content %}
+{% block flash_messages %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            {%if 'success' not in message and 'must' not in message%}
+            <div id=message class="alert alert-success">{{ message|safe }}</div>
+            {%endif%}
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+{% endblock %}
 
 <div class="row">
     <div class="col"><button class="mt-4 btn btn-primary mr-2">Новая деталь</button></div>
@@ -30,31 +41,27 @@
           <td>
             <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">      
                 <button type="button" class="btn btn-success btn-sm py-0">...</button>
-                <button type="button" class="btn btn-info btn-sm py-0" data-toggle="modal" data-target="{{'#'+item.get_component().component_name}}"> <img src="static/images/document-16.png" alt="" style="vertical-align:middle"> </button>
+                <button type="button" class="btn btn-info btn-sm py-0" data-toggle="modal" data-target="{{'#'+item.get_component().get_name()}}"> <img src="static/images/document-16.png" alt="" style="vertical-align:middle"> </button>
             </div>
-            <button type="button" class="btn btn-danger btn-sm offset-2 py-0">&times;</button>
+            
           </td>
         </tr>
-        <div class="modal fade" id='{{item.get_component().component_name}}' tabindex="-1" role="dialog" aria-labelledby="{{item.get_component().component_name+'Label'}}" aria-hidden="true">
+        <div class="modal fade" id='{{item.get_component().get_name()}}' tabindex="-1" role="dialog" aria-labelledby="{{item.get_component().get_name()+'Label'}}" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
                     <div class="modal-header text-center">
-                      <h5 class="modal-title">Добавление на склад</h5>
+                      <h5 class="modal-title">Операции со складом</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
                     <form class='form' action = "" method = post>
                     <div class="modal-body">
-                    <div class="row px-3 py-2">
-                        <div class="col mt-2">
-                                {{form.document_type(class_="form-control selectpicker mr-3 col-4")}}
-                        </div>
-                    </div>
                       <div class="row px-3 py-2">
-                          
-                          <div class="col mt-2"> Количество комплектующих:</div>
-                      <div class="col"> {{form.count( class_="mr-2 mb-2 form-control", placeholder="Кол-во")}}</div>
+                      <div class="col">
+                          {{form.document_type(class_="form-control selectpicker mr-3")}}
+                      </div>
+                      <div class="col" id = 'count_div'> {{form.count( class_="mr-2 mb-2 form-control", placeholder="Кол-во")}}</div>
                       </div>
                       
                       <div class="col pl-3 py-0 mt-1 mb-1">
@@ -80,5 +87,32 @@
   </table>
   </div>
 
-  
+<script>
+  $(function() {
+    $('.selectpicker').on('change', function(){
+      if($(this).val()=='Списание'){
+      $('#count').attr("value", 0);
+      $('#count_div').hide();
+      }
+      else{
+        $('#count_div').show();
+      }
+    });
+  });
+  </script>
+<script>
+   $(function() {
+    $('#submit').on('click', function(){
+        
+    });
+  });
+</script>	
+
+<script>
+  $('#message').show(200, function(){
+    setTimeout(function(){
+      $('#message').hide(500);
+    }, 2000);
+  });
+  </script>
 {% endblock %}

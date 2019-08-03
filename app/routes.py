@@ -217,8 +217,10 @@ def stock():
         db.session.commit()
         if form.document_type.data=='Приход':
             flash('Приход {} на склад'.format(stock.get_name()), 'message')
-        else:
+        elif form.document_type.data=='Расход':
             flash('Расход детали {} со склада'.format(stock.get_name()), 'message')
+        else:
+            flash('Деталь {} списана'.format(stock.get_name()), 'message')
         return redirect(url_for('stock', form=form, stock=stock))
     
     return render_template('stock.html', form=form, stock=stock)
@@ -243,6 +245,17 @@ def stock_adding():
         flash('Деталь {} добавлена на склад'.format(stock.get_name()), 'message')
         return redirect(url_for('stock_adding', form = form, last_stocked = last_stocked,  component = components, modal_component=modal_component))
     return render_template('stock_adding.html', form = form, last_stocked = last_stocked,  components = components, modal_component=modal_component)
+
+@app.route('/remove_stock/<component_id>')
+@login_required
+def remove_stock(component_id, comment):
+    document = Document(datetime.utcnow(), current_user.id, 'Cписание', comment)
+    db.session.add(document)
+    db.session.commit()
+    stock = Stock(document.id, component_id, 0)
+    db.session.add(stock)
+    db.session.commit()
+    return redirect(url_for('stock'))
 
 
 def get_details_report(spec,det, count=1):
