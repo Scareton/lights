@@ -133,9 +133,13 @@ def product_info(product):
     det = {}
     db_product = Product.query.filter(Product.id==product).first()
     specifications=Specification.query.filter(Specification.product_id==product).all()
-    report = get_details_report(specifications, det)
+    print(specifications)
+    # item = specifications[1].get_children(specifications[1].get_component().id)[0]
+    # print(item)
+    # print(specifications[1].get_children(item.id))
+    #report = get_details_report(specifications, det)
     modal = ModalComponent.query.first()
-    return render_template('product_info.html', report = report, product=db_product, modal=modal, specifications=specifications)
+    return render_template('product_info.html', product=db_product, modal=modal, specifications=specifications)
 
 @app.route('/delete_component/<id>')
 @login_required
@@ -284,3 +288,9 @@ def get_details_report(spec,det, count=1):
         
         
     return det
+
+# def rec_html(specification):
+#     for item in specification.get_children(specification.get_component().id):
+#         html = "<tr><td ><span style='margin-left: 10px;'>{{item.component_name}}</span></td><td ><span style='margin-left: 10px;'>{{item.component_unit}}</span></td><td ><span style='margin-left: 10px;'>{{item.get_count(specification.get_component().id)}}</span></td></tr>"
+#         if specification.get_children(item.id)!=[]:
+#             rec_html(specification.get_children(item.id))

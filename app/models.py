@@ -102,7 +102,9 @@ class Component(db.Model):
     def get_children(self, id):
         return False
     
-
+    def get_count(self, parent_id):
+        count = ModalComponent.query.filter(ModalComponent.parrent_id==parent_id, ModalComponent.child_id==self.id).first().count
+        return count
     
     def get_name(self):
         liters = [' ', '"']
@@ -131,10 +133,10 @@ class Specification(db.Model):
     
     def get_product(self):
         return Product.query.filter(Product.id == self.product_id).first()
-    
 
     def get_children(self, id):
-        return ModalComponent.get_children(self.component_id)
+        children = ModalComponent.get_children(self.component_id)
+        return children
 
 class ModalComponent(db.Model):
     __tablename__ = 'modalcomponent'
@@ -147,13 +149,17 @@ class ModalComponent(db.Model):
         self.parrent_id = parrent_id
         self.child_id = child_id
         self.count = count
-    
+
     @staticmethod
     def get_children(id):
+        print('вход с')
+        print(id)
         children = []
         if ModalComponent.query.filter(ModalComponent.parrent_id==id).first():
             for parrent in ModalComponent.query.filter(ModalComponent.parrent_id==id).all():
+                print(parrent)
                 children.append(Component.query.filter(Component.id == parrent.child_id).first())
+                print(children)
             return children
         return children
 
