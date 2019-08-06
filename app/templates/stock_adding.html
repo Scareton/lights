@@ -11,6 +11,12 @@
     {% endif %}
 {% endwith %}
 {% endblock %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{{url_for('stock')}}">Склад</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Добавление новой детали на склад</li>
+  </ol>
+</nav>
 <div class="row">
   <div class="p-0 form-group ml-3 mt-4 mb-2">
       <input type="text" class="form-control" id="search" placeholder="Поиск по таблице">

@@ -213,7 +213,7 @@ def stock():
         if form.count.data is None:
             flash('Используйте "." вместо ","')
             return redirect(url_for('stock', form=form, stock=stock))
-        document = Document(datetime.utcnow(), current_user.id, form.document_type.data, form.text.data)
+        document = Document(datetime.today().strftime("%Y/%m/%d %H:%M"), current_user.id, form.document_type.data, form.text.data)
         db.session.add(document)
         db.session.commit()
         stock = Stock(document.id, form.id.data, form.count.data)
@@ -232,6 +232,7 @@ def stock():
 @app.route('/stock_adding', methods = ['GET', 'POST'])
 @login_required
 def stock_adding():
+    today = datetime.today()
     form = SpecificationForm()
     modal_component = ModalComponent.query.first()
     last_stocked = Stock.query.first()
@@ -240,7 +241,7 @@ def stock_adding():
         if form.count.data is None:
             flash('Используйте "." вместо ","')
             return redirect(url_for('stock_adding', last_stocked = last_stocked, form = form, component = components, modal_component=modal_component ))
-        document = Document(datetime.utcnow(), current_user.id, 'Приход', form.text.data)
+        document = Document(today.strftime("%Y/%m/%d %H:%M"), current_user.id, 'Приход', form.text.data)
         db.session.add(document)
         db.session.commit()
         stock = Stock(document.id, form.id.data, form.count.data)
@@ -249,6 +250,26 @@ def stock_adding():
         flash('Деталь {} добавлена на склад'.format(stock.get_name()), 'message')
         return redirect(url_for('stock_adding', form = form, last_stocked = last_stocked,  component = components, modal_component=modal_component))
     return render_template('stock_adding.html', form = form, last_stocked = last_stocked,  components = components, modal_component=modal_component)
+
+@app.route('/document/<component_id>')
+@login_required
+def document(component_id):
+    form = SpecificationForm()
+    stocks = Stock.query.filter(Stock.component_id==component_id).all()
+    documents = [Document.query.filter(Document.id==stock.document_id).first() for stock in stocks]
+    return render_template('document.html', form=form, stocks = stocks, documents = documents)
+
+@app.route('/delete_document/<document_id>')
+@login_required
+def delete_document(id):
+    document = Document.query.filter(Document.id==id).first()
+    stock = Stock.query.filter(Stock.document_id==Document.id).first()
+    component_id = stock.component_id
+    document.delete()
+    stock.delete()
+    db.session.commit()
+    return redirect(url_for('document', component_id = component_id))
+
 
 @app.route('/remove_stock/<component_id>')
 @login_required

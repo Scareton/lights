@@ -77,6 +77,7 @@ class Component(db.Model):
     component_name = db.Column(db.String(255, collation='NOCASE'), nullable=False, unique=True)
     component_unit = db.Column(db.String(255, collation='NOCASE'))
     component_item = db.Column(db.Integer(), unique=True)
+    unfired = db.Column(db.Float())
 
     def __init__(self, component_name, component_unit, component_item):
         self.component_name = component_name
@@ -188,6 +189,9 @@ class Document(db.Model):
         self.maker_id = maker_id
         self.document_type = document_type
         self.comment = comment
+    
+    def get_maker(self):
+        return User.query.filter(User.id==self.maker_id).first()
 
 class Stock(db.Model):
     __tablename__ = 'stock'
