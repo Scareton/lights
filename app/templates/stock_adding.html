@@ -18,6 +18,20 @@
   </ol>
 </nav>
 <div class="row">
+  {%if doc_type=='Приход'%}
+    <button id ='Приход' type="button" class="btn btn-secondary disabled">Приход</button>
+  <a href="{{url_for('stock_adding', doc_type='Расход')}}"><button id ='Расход' type="button" class="btn btn-secondary">Расход</button></a> 
+  <a href="{{url_for('stock_adding', doc_type='Списание')}}"><button id ='Списание' type="button" class="btn btn-secondary">Списание</button></a> 
+  {%elif doc_type=='Расход'%}
+  <a href="{{url_for('stock_adding', doc_type='Приход')}}"><button id ='Приход' type="button" class="btn btn-secondary ">Приход</button></a> 
+    <button id ='Расход' type="button" class="btn btn-secondary disabled">Расход</button>
+  <a href="{{url_for('stock_adding', doc_type='Списание')}}"><button id ='Списание' type="button" class="btn btn-secondary">Списание</button></a> 
+  {%else%}
+  <a href="{{url_for('stock_adding', doc_type='Приход')}}"><button id ='Приход' type="button" class="btn btn-secondary ">Приход</button></a> 
+  <a href="{{url_for('stock_adding', doc_type='Расход')}}"><button id ='Расход' type="button" class="btn btn-secondary ">Расход</button></a> 
+    <button id ='Списание' type="button" class="btn btn-secondary disabled">Списание</button>
+  {%endif%}</div>
+<div class="row">
   <div class="p-0 form-group ml-3 mt-4 mb-2">
       <input type="text" class="form-control" id="search" placeholder="Поиск по таблице">
   </div>
@@ -25,7 +39,8 @@
 </div>
 <div class="row">
 <div class="col">
-<table  id=mytable class="table table-sm table-hover">
+{%if doc_type=='Приход'%}
+<table  id=mytable class="table table-sm table-hover append_div " >
     <thead>
       <tr>
         <td>Наименование</td>
@@ -43,6 +58,7 @@
         <td class="py-0">{{component.component_item}}</td>
         <td class="py-0">
                 <button type="button" class="btn btn-danger btn-sm mr-3 py-0" data-toggle="modal" data-target="{{'#'+component.get_name()}}">+</button>
+                
                 <div class="modal fade" id='{{component.get_name()}}' tabindex="-1" role="dialog" aria-labelledby="{{component.get_name()+'Label'}}" aria-hidden="true">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -61,13 +77,6 @@
                             <div class="col mt-2"> Количество комплектующих:</div>
                         <div class="col"> {{form.count( class_="mr-2 mb-2 form-control", placeholder="Кол-во")}}</div>
                         </div>
-                        
-                        <div class="col pl-3 py-0 mt-1 mb-1">
-                            Комментарий:
-                        </div>
-                        <div class="col py-0">
-                            {{form.text()}}
-                        </div>
                         {{form.id(value=component.id, type="hidden")}}
                         
                       </div>
@@ -85,9 +94,68 @@
     {%endfor%}
     </tbody>
 </table>
+{%else%}
+<table  id=mytable  class="table table-sm table-hover remove_div">
+    <thead>
+      <tr>
+        <td>Наименование</td>
+        <td>Единицы измерения</td>
+        <td>Артикул</td>
+        <td>Кол-во</td>
+        <td></td>
+      </tr>
+    </thead>
+    <tbody style="overflow: auto; height:400px;">
+        {% for item in stock%}
+        {%if item.get_count()!=0%}
+          <tr>
+            <td class="py-0" >{{item.get_component().component_name}}</td>
+            <td class="py-0" >{{item.get_component().component_unit}}</td>
+            <td class="py-0">{{item.get_component().component_item}}</td>
+            <td class="py-0">{{item.get_count()}}</td>
+        <td class="py-0">
+                <button type="button" class="btn btn-danger btn-sm mr-3 py-0" data-toggle="modal" data-target="{{'#del'+item.get_component().get_name()}}">+</button>
+                
+                <div class="modal fade" id='{{"del"+item.get_component().get_name()}}' tabindex="-1" role="dialog" aria-labelledby="{{'del'+item.get_component().get_name()+'Label'}}" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header text-center">
+                        <h5 class="modal-title">Добавление на склад</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <form class='form' action = "" method = post>
+                      <div class="modal-body">
+                        <div class="row px-3 py-2">
+                            
+                        </div>
+                        <div class="row px-3 py-2">
+                            <div class="col mt-2"> Количество комплектующих:</div>
+                        <div class="col"> {{form.count( class_="mr-2 mb-2 form-control", placeholder="Кол-во")}}</div>
+                        </div>
+                        {{form.id(value=item.get_component().id, type="hidden")}}
+                        
+                      </div>
+                      
+                      <div class="modal-footer">
+                        {{form.submit( class_="btn btn-success")}}
+                      </div>
+                    </form>
+                    </div>
+                  </div>
+                </div>
+        </td>
+      </tr>
+     {% endif%}
+    {%endfor%}
+    </tbody>
+</table>
+{%endif%}
 </div>
 
-<!-- <div class="col">        
+
+<div class="col">        
         <table  id=mytable class="table table-sm table-hover table-bordered">
           <thead>
             <tr>
@@ -97,21 +165,54 @@
             </tr>
           </thead>
           <tbody style="overflow: auto; height:400px;">
-          {% for item in added%}
+          {% for item in current_user.added%}
             <tr>
               <td class="py-0" >{{item.get_name()}}</td>
               <td class="py-0" >{{item.count}}</td>
               <td class="py-0">{{item.get_unit()}}</td>
               <td class="py-0">
-                      
-                      
               </td>
             </tr>
           {%endfor%}
           </tbody>
       </table>
-</div> -->
-
 </div>
 
+</div>
+<div class="row"><button type="button" class="btn btn-danger btn-sm mr-3 py-0" data-toggle="modal" data-target="#append">Добавить документ</button></div>
+
+                
+<div class="modal fade" id='append' tabindex="-1" role="dialog" aria-labelledby="append" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h5 class="modal-title">Добавление на склад</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form class='form' action = "" method = post>
+      <div class="col pl-3 py-0 mt-1 mb-1">
+        Комментарий:
+      </div>
+      <div class="col py-0">
+          {{form1.text()}}
+      </div>
+      {{form.id(value='comment', type="hidden")}}
+      {{form1.hidden_type(value=doc_type, type="hidden")}}
+      <div class="modal-footer">
+        {{form.submit( class_="btn btn-success")}}
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+<script>
+  $('#message').show(200, function(){
+    setTimeout(function(){
+      $('#message').hide(500);
+    }, 2000);
+  });
+ 
+  </script>
 {% endblock %}

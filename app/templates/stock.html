@@ -13,7 +13,7 @@
 {% endblock %}
 
 <div class="row">
-    <div class="col"><a href="{{url_for('stock_adding')}}"><button class="mt-4 btn btn-primary mr-2">Новая деталь</button></a></div> 
+    <div class="col"><a href="{{url_for('stock_adding', doc_type='Приход')}}"><button class="mt-4 btn btn-primary mr-2">Новая деталь</button></a></div> 
     <div class="p-0 form-group ml-2 mt-4 mb-2">
         <input type="text" class="form-control" id="search" placeholder="Поиск по таблице">
     </div>

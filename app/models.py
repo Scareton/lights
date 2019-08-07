@@ -15,6 +15,7 @@ class User(db.Model, UserMixin):
 
     # Define the relationship to Role via UserRoles
     roles = db.relationship('Role', secondary='user_roles')
+    added = db.relationship('Stock', secondary='user_stock')
     
     # Define the Role data-model
     def delete_role(self, del_role):
@@ -24,7 +25,16 @@ class User(db.Model, UserMixin):
     def append_role(self, del_role):
             self.roles.append(Role.query.filter(Role.name==del_role).first())
             db.session.commit()
-
+    def append_stock(self, del_stock):
+        self.added.append(Stock.query.filter(Stock.id==del_stock).first())
+        db.session.commit()
+    def delete_added(self):
+        for item in self.added:
+            self.added.remove(item)
+            db.session.commit()
+    def delete_stock(self):
+            db.session.delete(item)
+            db.session.commit()
 
 class Role(db.Model):
     __tablename__ = 'roles'
@@ -37,6 +47,12 @@ class UserRoles(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
     role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
+
+class UserStock(db.Model):
+    __tablename__ = 'user_stock'
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
+    stock_id = db.Column(db.Integer(), db.ForeignKey('stock.id', ondelete='CASCADE'))
 
 class Product(db.Model):
     __tablename__ = 'product'
@@ -153,14 +169,10 @@ class ModalComponent(db.Model):
 
     @staticmethod
     def get_children(id):
-        print('вход с')
-        print(id)
         children = []
         if ModalComponent.query.filter(ModalComponent.parrent_id==id).first():
             for parrent in ModalComponent.query.filter(ModalComponent.parrent_id==id).all():
-                print(parrent)
                 children.append(Component.query.filter(Component.id == parrent.child_id).first())
-                print(children)
             return children
         return children
 
@@ -179,7 +191,7 @@ class ModalComponent(db.Model):
 class Document(db.Model):
     __tablename__ = 'document'
     id = db.Column(db.Integer(), primary_key=True)
-    date = db.Column(db.Date)
+    date = db.Column(db.String())
     maker_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
     document_type = db.Column(db.String())
     comment = db.Column(db.String())

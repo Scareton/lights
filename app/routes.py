@@ -6,7 +6,7 @@ from flask_user import current_user, login_required, roles_required, UserManager
 from werkzeug.utils import secure_filename
 from werkzeug.urls import url_parse
 from app.models import User, UserRoles, Role, Product, Component, Specification, ModalComponent, Document, Stock
-from app.forms import ProductForm, ComponentForm, SpecificationForm
+from app.forms import ProductForm, ComponentForm, SpecificationForm, DocumentForm
 from datetime import datetime, date, time
 
 
@@ -133,7 +133,6 @@ def product_info(product):
     det = {}
     db_product = Product.query.filter(Product.id==product).first()
     specifications=Specification.query.filter(Specification.product_id==product).all()
-    print(specifications)
     # item = specifications[1].get_children(specifications[1].get_component().id)[0]
     # print(item)
     # print(specifications[1].get_children(item.id))
@@ -172,10 +171,8 @@ def create_modal_component(modal_component, det):
     else:
         component_name = Component.query.filter(Component.id==det).first().component_name
     modals = [x.id for x in ModalComponent.get_children(modal_component)]
-    print(modals)
     components = Component.query.filter(Component.id!=modal_component).order_by(Component.component_name).all()
     parents = ModalComponent.get_parents(modal_component)
-    print(components)
     if request.method == 'POST':
         if form.count.data is None:
             flash('Используйте "." вместо ","')
@@ -206,6 +203,7 @@ def component_info(component):
 def stock():
     stock_db = list(set(db.session.query(Stock.component_id).all()))
     stock = []
+    
     for item in stock_db:
         stock.append(Stock.query.filter(Stock.component_id==item[0]).first())
     form = SpecificationForm()
@@ -226,30 +224,50 @@ def stock():
         else:
             flash('Деталь {} списана'.format(stock.get_name()), 'message')
         return redirect(url_for('stock', form=form, stock=stock))
-    
     return render_template('stock.html', form=form, stock=stock)
 
-@app.route('/stock_adding', methods = ['GET', 'POST'])
+@app.route('/stock_adding/<doc_type>', methods = ['GET', 'POST'])
 @login_required
-def stock_adding():
+def stock_adding(doc_type):
     today = datetime.today()
     form = SpecificationForm()
+    form1 = DocumentForm()
     modal_component = ModalComponent.query.first()
     last_stocked = Stock.query.first()
+    added = current_user.added
     components = Component.query.order_by(Component.component_name).all()
+    document = Document('', current_user.id, doc_type,'')
+    db.session.add(document)
+    db.session.commit()
+    print(document)
+    stock_db = list(set(db.session.query(Stock.component_id).all()))
+    stock = []
+    for item in stock_db:
+        stock.append(Stock.query.filter(Stock.component_id==item[0]).first())
     if request.method == 'POST':
-        if form.count.data is None:
-            flash('Используйте "." вместо ","')
-            return redirect(url_for('stock_adding', last_stocked = last_stocked, form = form, component = components, modal_component=modal_component ))
-        document = Document(today.strftime("%Y/%m/%d %H:%M"), current_user.id, 'Приход', form.text.data)
-        db.session.add(document)
-        db.session.commit()
-        stock = Stock(document.id, form.id.data, form.count.data)
-        db.session.add(stock)
-        db.session.commit()
-        flash('Деталь {} добавлена на склад'.format(stock.get_name()), 'message')
-        return redirect(url_for('stock_adding', form = form, last_stocked = last_stocked,  component = components, modal_component=modal_component))
-    return render_template('stock_adding.html', form = form, last_stocked = last_stocked,  components = components, modal_component=modal_component)
+        print(document)
+        if form.id.data=='comment':
+            document.date= today.strftime("%Y/%m/%d %H:%M")
+            document.comment=form1.text.data
+            db.session.commit()
+            current_user.delete_added()
+            flash('Склад обновлён', 'message')
+        else:
+            if form.count.data is None:
+                flash('Используйте "." вместо ","')
+                return redirect(url_for('stock_adding', doc_type=doc_type, stock=stock, form1=form1, added = added, last_stocked = last_stocked, form = form, component = components, modal_component=modal_component ))
+            stock = Stock(document.id, form.id.data, form.count.data)
+            db.session.add(stock)
+            db.session.commit()
+            print(stock)
+            current_user.append_stock(stock.id)
+            flash('Деталь {} добавлена в список'.format(stock.get_name()), 'message')
+        return redirect(url_for('stock_adding', doc_type=doc_type, stock=stock, form1=form1, added = added, form = form, last_stocked = last_stocked,  component = components, modal_component=modal_component))
+    
+    return render_template('stock_adding.html', doc_type=doc_type, stock=stock, form1=form1, added = added, form = form, last_stocked = last_stocked,  components = components, modal_component=modal_component)
+
+
+
 
 @app.route('/document/<component_id>')
 @login_required
