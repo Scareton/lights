@@ -11,7 +11,7 @@
         <input type="text" class="form-control" id="search" placeholder="Поиск по таблице">
     </div>
   </div>
-  <div class="row">
+  <div class="row mb-5">
   <div class="col">
   <table  id=mytable class="table table-sm table-hover">
       <thead>
@@ -20,16 +20,18 @@
           <td>Добавивший</td>
           <td>Кол-во</td>
           <td>Время</td>
+          <td>Комментарий</td>
           <td></td>
         </tr>
       </thead>
       <tbody style="overflow: auto; height:400px;">
-      {% for item in stocks%}
+      {% for item in stocks[::-1]%}
         <tr>
           <td class="py-0" >{{item.get_document().document_type}}</td>
           <td class="py-0" >{{item.get_document().get_maker().username}}</td>
           <td class="py-0">{{item.count}}</td>
           <td class="py-0">{{item.get_document().date}}</td>
+          <td class="py-0">{{item.get_document().comment}}</td>
           <td>
             <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">      
               

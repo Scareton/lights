@@ -13,7 +13,7 @@
 {% endblock %}
 
 <div class="row">
-    <div class="col"><a href="{{url_for('stock_adding', doc_type='Приход')}}"><button class="mt-4 btn btn-primary mr-2">Новая деталь</button></a></div> 
+    <div class="col"><a href="{{url_for('stock_adding', doc_type='Приход', doc='False')}}"><button class="mt-4 btn btn-primary mr-2">Новый документ</button></a></div> 
     <div class="p-0 form-group ml-2 mt-4 mb-2">
         <input type="text" class="form-control" id="search" placeholder="Поиск по таблице">
     </div>
@@ -32,15 +32,18 @@
       </thead>
       <tbody style="overflow: auto; height:400px;">
       {% for item in stock%}
-      {%if item.get_count()!=0%}
         <tr>
           <td class="py-0" >{{item.get_component().component_name}}</td>
           <td class="py-0" >{{item.get_component().component_unit}}</td>
           <td class="py-0">{{item.get_component().component_item}}</td>
-          <td class="py-0">{{item.get_count()}}</td>
+          {%if item.get_count()[0]==0%}
+          <td class="py-0">Списан</td>
+          {%else%}
+          <td class="py-0">{{item.get_count()[0]}}</td>
+          {%endif%}
           <td>
             <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">      
-              <a href="{{url_for('document', component_id=item.get_component().id)}}"><button type="button" class="btn btn-success btn-sm py-0">...</button></a> 
+              <a href="{{url_for('document', component_id=item.component_id)}}"><button type="button" class="btn btn-success btn-sm py-0">...</button></a> 
                 <button type="button" class="btn btn-info btn-sm py-0" data-toggle="modal" data-target="{{'#'+item.get_component().get_name()}}"> <img src="static/images/document-16.png" alt="" style="vertical-align:middle"> </button>
             </div>
             
@@ -61,7 +64,7 @@
                       <div class="col">
                           {{form.document_type(class_="form-control selectpicker mr-3")}}
                       </div>
-                      <div class="col" id = 'count_div'> {{form.count( class_="mr-2 mb-2 form-control", placeholder="Кол-во")}}</div>
+                      <div class="col count_div" id = 'count_div'> {{form.count( class_="mr-2 mb-2 form-control", placeholder="Кол-во")}}</div>
                       </div>
                       
                       <div class="col pl-3 py-0 mt-1 mb-1">
@@ -81,7 +84,6 @@
                   </div>
                 </div>
               </div>
-        {%endif%}
       {%endfor%}
       </tbody>
   </table>
@@ -91,27 +93,34 @@
   $(function() {
     $('.selectpicker').on('change', function(){
       if($(this).val()=='Списание'){
-      $('#count').attr("value", 0);
-      $('#count_div').hide();
+      $('#count').attr("value", '0');
+      $('.count_div').hide();
       }
       else{
-        $('#count_div').show();
+        $('.count_div').show();
       }
     });
   });
   </script>
 <script>
    $(function() {
-    $('#submit').on('click', function(){
-        
+    $('.close').on('click', function(){
+      $('.count_div').show();
+      $('.selectpicker').attr("value", 'Приход');
     });
   });
 </script>	
-
 <script>
-  $('#message').show(200, function(){
+    $(function() {
+     $('#submit').on('click', function(){
+       $('#count').show();
+     });
+   });
+ </script>	
+<script>
+  $('.alert').show(200, function(){
     setTimeout(function(){
-      $('#message').hide(500);
+      $('.alert').hide(500);
     }, 2000);
   });
   </script>
