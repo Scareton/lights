@@ -103,6 +103,7 @@ class Component(db.Model):
     component_unit = db.Column(db.String(255, collation='NOCASE'))
     component_item = db.Column(db.Integer(), unique=True)
     unfired = db.Column(db.Float())
+    stock_count = db.Column(db.Float())
 
     def __init__(self, component_name, component_unit, component_item):
         self.component_name = component_name
@@ -239,21 +240,24 @@ class Stock(db.Model):
         return unit
 
     def get_count(self):
-        msg=''
-        count=0
+        for item in Stock.query.filter(Stock.component_id==self.component_id).all():
+            item.get_component().stock_count=0
+            db.session.commit()
         for item in Stock.query.filter(Stock.component_id==self.component_id).all():
             if item.get_document().document_type=='Приход':
-                count+=item.count
+                item.get_component().stock_count+=item.count
+                db.session.commit()
             elif item.get_document().document_type=='Расход':
                 if count>=item.count:
-                    count-=item.count
+                    item.get_component().stock_count-=item.count
+                    db.session.commit()
                 else:
                     db.session.delete(item)
                     db.session.commit()
 
             else:
-                count=0
-        return [count, msg]
+                item.get_component().stock_count=0
+                db.session.commit()
 
     def get_component(self):
         return Component.query.filter(Component.id==self.component_id).first()

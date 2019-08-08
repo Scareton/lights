@@ -207,10 +207,8 @@ def stock():
         db.session.commit()
     stock_db = list(set(db.session.query(Stock.component_id).all()))
     stock = []
-    print(stock_db)
     for item in stock_db:
         stock.append(Stock.query.filter(Stock.component_id==item[0]).first())
-    print(stock)
     form = SpecificationForm()
     if request.method == 'POST':
         if form.count.data is None:
@@ -219,14 +217,16 @@ def stock():
         document = Document(datetime.today().strftime("%Y/%m/%d %H:%M"), current_user.id, form.document_type.data, form.text.data)
         db.session.add(document)
         db.session.commit()
-        last_count = Stock.query.filter(Stock.component_id==form.id.data).first().get_count()
+        last_count = Stock.query.filter(Stock.component_id==form.id.data).first().get_component().stock_count
         stock = Stock(document.id, form.id.data, form.count.data)
         db.session.add(stock)
+        db.session.commit()
+        stock.get_count()
         db.session.commit()
         if form.document_type.data=='Приход':
             flash('Приход {} на склад'.format(stock.get_name()), 'message')
         elif form.document_type.data=='Расход':
-            if stock.get_count()!=0 and stock.get_count()==last_count:
+            if stock.get_component().stock_count!=0 and stock.get_component().stock_count==last_count:
                 flash('Расход детали {} со склада невозможен. Недостаточно деталей'.format(stock.get_name()), 'message')
             else:
                 flash('Расход детали {} со склада'.format(stock.get_name()), 'message')
@@ -238,7 +238,6 @@ def stock():
 @app.route('/stock_adding/<doc_type>/<doc>', methods = ['GET', 'POST'])
 @login_required
 def stock_adding(doc_type, doc):
-    all_stock=Stock.query.all()
     today = datetime.today()
     form = SpecificationForm()
     form1 = DocumentForm()
@@ -271,9 +270,9 @@ def stock_adding(doc_type, doc):
                 return redirect(url_for('stock_adding', doc=doc, doc_type=doc_type, stock=stock, form1=form1, added = added, last_stocked = last_stocked, form = form, component = components, modal_component=modal_component ))
             print(document.id)
             stock = Stock(document.id, form.id.data, form.count.data)
-            
             db.session.add(stock)
             db.session.commit()
+            stock.get_count()
             current_user.append_stock(stock.id)
             flash('Деталь {} добавлена в список'.format(stock.get_name()), 'message')
         return redirect(url_for('stock_adding', doc=doc, doc_type=doc_type, stock=stock, form1=form1, added = added, form = form, last_stocked = last_stocked,  component = components, modal_component=modal_component))
