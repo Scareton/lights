@@ -201,7 +201,10 @@ def component_info(component):
 @app.route('/stock', methods = ['GET', 'POST'])
 @login_required
 def stock():
-    current_user.delete_added()
+    for item in current_user.get_added():
+        db.session.delete(item)
+        current_user.added.remove(item)
+        db.session.commit()
     stock_db = list(set(db.session.query(Stock.component_id).all()))
     stock = []
     print(stock_db)
