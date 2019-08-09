@@ -281,8 +281,6 @@ def stock_adding(doc_type, doc):
     return render_template('stock_adding.html', doc=doc, doc_type=doc_type, stock=stock, form1=form1, added = added, form = form, last_stocked = last_stocked,  components = components, modal_component=modal_component)
 
 
-
-
 @app.route('/document/<component_id>')
 @login_required
 def document(component_id):
