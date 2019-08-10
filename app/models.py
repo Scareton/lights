@@ -2,6 +2,7 @@ from app import db
 from flask_user import current_user, login_required, roles_required, UserManager, UserMixin
 from sqlalchemy import Table, MetaData
 from sqlalchemy.sql import text
+from flask import flash
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -28,13 +29,21 @@ class User(db.Model, UserMixin):
     def append_stock(self, del_stock):
         self.added.append(Stock.query.filter(Stock.id==del_stock).first())
         db.session.commit()
-    def delete_added(self):
+    def delete_added(self,delete='False'):
         for item in self.added:
-            self.added.remove(item)
+            self.added.remove(Stock.query.filter(Stock.id==item.id).first())
             db.session.commit()
-    def delete_stock(self):
-            db.session.delete(item)
-            db.session.commit()
+    def delete_stock(self, id):
+        stock = Stock.query.filter(Stock.id==id).first()
+        self.added.remove(stock)
+        db.session.commit()
+        db.session.delete(stock)
+        db.session.commit()
+    def get_added(self):
+        added=[]
+        for item in self.added:
+            added.append(item)
+        return added
 
 class Role(db.Model):
     __tablename__ = 'roles'
@@ -225,15 +234,21 @@ class Stock(db.Model):
         return unit
 
     def get_count(self):
+        msg=''
         count=0
         for item in Stock.query.filter(Stock.component_id==self.component_id).all():
             if item.get_document().document_type=='Приход':
                 count+=item.count
             elif item.get_document().document_type=='Расход':
-                count-=item.count
+                if count>=item.count:
+                    count-=item.count
+                else:
+                    db.session.delete(item)
+                    db.session.commit()
+
             else:
                 count=0
-        return count
+        return [count, msg]
 
     def get_component(self):
         return Component.query.filter(Component.id==self.component_id).first()
